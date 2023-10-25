@@ -19,18 +19,20 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validatedData = Validator::make($request->all(), [
-            'username' => 'required',
-            'password' => 'required',
-            'name' => 'required',
-            'email' => 'required',
-            'no_identitas' => 'required',
-            'no_phone' => 'required',
-            'address' => 'required',
+            'username' => 'required|string|unique:users',
+            'password' => 'required|string',
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'no_identitas' => 'required|string',
+            'no_phone' => 'required|regex:/^(0)8[1-9][0-9]{6,10}$/',
+            'address' => 'required|string',
         ]);
 
+        //response error validation
         if ($validatedData->fails()) {
-            return response()->json([$validatedData->errors(), 'message' => 'Your Input must have a value',], 422);
+            return response()->json(['message' => $validatedData->errors()], 422);
         }
+
         // create user customer
         $user = User::create([
             'username' => $request->username,
@@ -64,17 +66,19 @@ class AuthController extends Controller
     public function registerCustGroup(Request $request)
     {
         $validatedData = Validator::make($request->all(), [
-            'username' => 'required',
-            'password' => 'required',
-            'name' => 'required',
-            'email' => 'required',
-            'no_identitas' => 'required',
-            'no_phone' => 'required',
-            'address' => 'required',
+            'username' => 'required|string|unique:users',
+            'password' => 'required|string',
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'no_identitas' => 'required|string',
+            'no_phone' => 'required|regex:/^(0)8[1-9][0-9]{6,10}$/',
+            'nama_insitusi' => 'required|string',
+            'address' => 'required|string',
         ]);
 
+        //response error validation
         if ($validatedData->fails()) {
-            return response()->json([$validatedData->errors(), 'message' => 'Your Input must have a value',], 422);
+            return response()->json(['message' => $validatedData->errors()], 422);
         }
 
         // check siapa yang user role
@@ -125,8 +129,9 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+        //response error validation
         if ($validatedData->fails()) {
-            return response()->json([$validatedData->errors(), 'message' => 'Your Input must have a value',], 422);
+            return response()->json(['message' => $validatedData->errors()], 422);
         }
 
         $user = User::where('username', $request->username)->first();
@@ -198,8 +203,9 @@ class AuthController extends Controller
             'new_password' => 'required',
         ]);
 
+        //response error validation
         if ($validatedData->fails()) {
-            return response()->json([$validatedData->errors(), 'message' => 'Your Input must have a value',], 422);
+            return response()->json(['message' => $validatedData->errors()], 422);
         }
 
         $user = User::where('username', $request->username)->first();

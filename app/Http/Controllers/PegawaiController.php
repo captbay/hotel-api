@@ -25,25 +25,9 @@ class PegawaiController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorepegawaiRequest $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(pegawai $pegawai)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(pegawai $pegawai)
     {
         //
     }

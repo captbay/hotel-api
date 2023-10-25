@@ -25,25 +25,9 @@ class CustomerController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorecustomerRequest $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(customer $customer)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(customer $customer)
     {
         //
     }

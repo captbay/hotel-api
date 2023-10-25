@@ -6,22 +6,27 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class kamar extends Model
+class tarif_musim extends Model
 {
     use HasFactory;
 
-    protected $table = 'kamars';
+    protected $table = 'tarif_musims';
 
     protected $fillable = [
         'jenis_kamar_id',
-        'no_kamar',
-        'status', // available, booked, unavailable
+        'musim_id',
+        'harga',
     ];
 
     // belongs to
     public function jenis_kamar()
     {
         return $this->belongsTo(jenis_kamar::class, 'jenis_kamar_id');
+    }
+
+    public function musim()
+    {
+        return $this->belongsTo(musim::class, 'musim_id');
     }
 
     public function getCreatedAtAttribute($value)

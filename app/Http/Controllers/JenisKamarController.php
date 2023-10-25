@@ -13,7 +13,15 @@ class JenisKamarController extends Controller
      */
     public function index()
     {
-        //
+        // get all jenis kamar
+        $jenis_kamar = jenis_kamar::all();
+
+        // respon api
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar data jenis kamar',
+            'data' => $jenis_kamar
+        ], 200);
     }
 
     /**
@@ -25,25 +33,9 @@ class JenisKamarController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Storejenis_kamarRequest $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(jenis_kamar $jenis_kamar)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(jenis_kamar $jenis_kamar)
     {
         //
     }

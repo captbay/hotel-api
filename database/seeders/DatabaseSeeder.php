@@ -18,5 +18,15 @@ class DatabaseSeeder extends Seeder
         $this->call(CustomerSeeder::class);
         // run pegawai seeds
         $this->call(PegawaiSeeder::class);
+        // run jenis kamar seeds
+        $this->call(JenisKamarSeeder::class);
+        // run kamar seeds
+        $this->call(KamarSeeder::class);
+        // run fasilitas tambahan seeds
+        $this->call(FasilitasTambahanSeeder::class);
+        // run musim seeds
+        $this->call(MusimSeeder::class);
+        // run tarif musim seeds
+        $this->call(TarifMusimSeeder::class);
     }
 }

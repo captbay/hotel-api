@@ -42,21 +42,51 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Schema::create('jenis_kamars', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->string('name');
-        //     $table->string('bed');
-        //     $table->integer('total_bed');
-        //     $table->integer('harga_default');
-        //     $table->timestamps();
-        // });
+        Schema::create('jenis_kamars', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('bed');
+            $table->integer('total_bed');
+            $table->string('luas_kamar');
+            $table->integer('harga_default');
+            $table->timestamps();
+        });
 
-        // Schema::create('kamars', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->foreignId('jenis_kamar_id')->constrained('jenis_kamar')->onDelete('cascade');
-        //     $table->string('no_kamar');
-        //     $table->timestamps();
-        // });
+        Schema::create('kamars', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('jenis_kamar_id')->constrained('jenis_kamars')->onDelete('cascade');
+            $table->string('no_kamar');
+            $table->string('status'); // available, booked, unavailable
+            $table->timestamps();
+        });
+
+        // fasilitas_tambahan
+        Schema::create('fasilitas_tambahans', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('harga');
+            $table->timestamps();
+        });
+
+        // musims
+        Schema::create('musims', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->timestamps();
+        });
+
+        // tarif_musim
+        Schema::create('tarif_musims', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('jenis_kamar_id')->constrained('jenis_kamars')->onDelete('cascade');
+            $table->foreignId('musim_id')->constrained('musims')->onDelete('cascade');
+            $table->integer('harga');
+            $table->timestamps();
+        });
+
+        // 
     }
 
     /**
@@ -69,5 +99,8 @@ return new class extends Migration
         Schema::dropIfExists('pegawai');
         Schema::dropIfExists('jenis_kamar');
         Schema::dropIfExists('kamar');
+        Schema::dropIfExists('fasilitas_tambahan');
+        Schema::dropIfExists('musim');
+        Schema::dropIfExists('tarif_musim');
     }
 };
