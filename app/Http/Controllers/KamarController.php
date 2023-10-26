@@ -38,7 +38,7 @@ class KamarController extends Controller
 
         //response error validation
         if ($validatedData->fails()) {
-            return response()->json(['message' => $validatedData->errors()], 422);
+            return response()->json(['message' => $validatedData->errors()->all()], 422);
         }
 
         // find data kamar
@@ -137,7 +137,7 @@ class KamarController extends Controller
 
         //response error validation
         if ($validatedData->fails()) {
-            return response()->json(['message' => $validatedData->errors()], 422);
+            return response()->json(['message' => $validatedData->errors()->all()], 422);
         }
 
         // update kamar

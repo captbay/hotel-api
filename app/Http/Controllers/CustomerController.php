@@ -68,7 +68,7 @@ class CustomerController extends Controller
 
         //response error validation
         if ($validatedData->fails()) {
-            return response()->json(['message' => $validatedData->errors()], 422);
+            return response()->json(['message' => $validatedData->errors()->all()], 422);
         }
 
         // check siapa yang user role

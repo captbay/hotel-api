@@ -39,7 +39,7 @@ class TarifMusimController extends Controller
 
         //response error validation
         if ($validatedData->fails()) {
-            return response()->json(['message' => $validatedData->errors()], 422);
+            return response()->json(['message' => $validatedData->errors()->all()], 422);
         }
 
         //create tarif musim
@@ -106,7 +106,7 @@ class TarifMusimController extends Controller
 
         //response error validation
         if ($validatedData->fails()) {
-            return response()->json(['message' => $validatedData->errors()], 422);
+            return response()->json(['message' => $validatedData->errors()->all()], 422);
         }
 
         //update tarif musim
