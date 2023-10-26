@@ -28,5 +28,11 @@ class DatabaseSeeder extends Seeder
         $this->call(MusimSeeder::class);
         // run tarif musim seeds
         $this->call(TarifMusimSeeder::class);
+        // run reservasi seeds
+        $this->call(ReservasiSeeder::class);
+        // run transaksi kamar seeds
+        $this->call(TransaksiKamarSeeder::class);
+        // run transaksi fasilitas tambahan seeds
+        $this->call(TransaksiFasilitasTambahanSeeder::class);
     }
 }

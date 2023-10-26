@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FasilitasTambahanController;
 use App\Http\Controllers\JenisKamarController;
 use App\Http\Controllers\KamarController;
 use App\Http\Controllers\MusimController;
+use App\Http\Controllers\ReservasiController;
 use App\Http\Controllers\TarifMusimController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -103,4 +105,29 @@ Route::group(['prefix' => 'tarif-musim', 'middleware' => ['auth:sanctum']], func
     Route::delete('delete/{id}', [TarifMusimController::class, 'destroy']);
 });
 
-//!! check apakah kalo ga login itu masih bisa get data ga
+// customer
+Route::group(['prefix' => 'customer', 'middleware' => ['auth:sanctum']], function () {
+    // get all customer
+    Route::get('all', [CustomerController::class, 'index']);
+    // get customer by id
+    Route::get('get/{id}', [CustomerController::class, 'show']);
+    // update customer
+    Route::put('update/{id}', [CustomerController::class, 'update']);
+});
+
+// reservasi
+Route::group(['prefix' => 'reservasi', 'middleware' => ['auth:sanctum']], function () {
+    // get all reservasi
+    Route::get('all', [ReservasiController::class, 'index']);
+    // get reservasi by id
+    Route::get('get/{id}', [ReservasiController::class, 'show']);
+
+    // get all reservasi khusu cust login
+    Route::get('all/customer', [ReservasiController::class, 'indexCustomer']);
+    // // create reservasi
+    // Route::post('create', [ReservasiController::class, 'create']);
+    // // update reservasi
+    // Route::put('update/{id}', [ReservasiController::class, 'update']);
+    // // delete reservasi
+    // Route::delete('delete/{id}', [ReservasiController::class, 'destroy']);
+});

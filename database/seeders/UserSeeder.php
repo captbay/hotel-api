@@ -39,6 +39,10 @@ class UserSeeder extends Seeder
                 'username' => 'Customer',
                 'role' => 'Customer',
             ],
+            [
+                'username' => 'Customer2',
+                'role' => 'Customer',
+            ],
         ];
 
         foreach ($data as $d) {

@@ -86,7 +86,43 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 
+        // reservasi
+        Schema::create('reservasis', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
+            $table->string('kode_booking');
+            $table->date('tanggal_reservasi')->nullable();
+            $table->dateTime('check_in');
+            $table->dateTime('check_out');
+            $table->string('status'); // success, ongoing, cancel
+            $table->integer('dewasa');
+            $table->integer('anak');
+            $table->integer('total_jaminan')->nullable();
+            $table->integer('total_deposit')->nullable();
+            $table->integer('total_harga');
+            $table->date('tanggal_pembayaran_lunas')->nullable();
+            $table->timestamps();
+        });
+
+        // transaksi_kamar
+        Schema::create('transaksi_kamars', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('reservasi_id')->constrained('reservasis')->onDelete('cascade');
+            $table->foreignId('kamar_id')->constrained('kamars')->onDelete('cascade');
+            $table->integer('total_harga');
+            $table->timestamps();
+        });
+
+        // transaksi_fasilitas_tambahan
+        Schema::create('transaksi_fasilitas_tambahans', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('reservasi_id')->constrained('reservasis')->onDelete('cascade');
+            $table->foreignId('fasilitas_tambahan_id')->constrained('fasilitas_tambahans')->onDelete('cascade');
+            $table->integer('jumlah');
+            $table->integer('total_harga');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -96,11 +132,14 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
         Schema::dropIfExists('customer');
-        Schema::dropIfExists('pegawai');
-        Schema::dropIfExists('jenis_kamar');
-        Schema::dropIfExists('kamar');
-        Schema::dropIfExists('fasilitas_tambahan');
-        Schema::dropIfExists('musim');
-        Schema::dropIfExists('tarif_musim');
+        Schema::dropIfExists('pegawais');
+        Schema::dropIfExists('jenis_kamars');
+        Schema::dropIfExists('kamars');
+        Schema::dropIfExists('fasilitas_tambahans');
+        Schema::dropIfExists('musims');
+        Schema::dropIfExists('tarif_musims');
+        Schema::dropIfExists('reservasis');
+        Schema::dropIfExists('transaksi_kamars');
+        Schema::dropIfExists('transaksi_fasilitas_tambahans');
     }
 };

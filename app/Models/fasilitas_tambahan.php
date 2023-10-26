@@ -17,6 +17,12 @@ class fasilitas_tambahan extends Model
         'harga',
     ];
 
+    // relation to transaksi_fasilitas_tambahan
+    public function transaksi_fasilitas_tambahan()
+    {
+        return $this->hasMany(transaksi_fasilitas_tambahan::class, 'fasilitas_tambahan_id', 'id');
+    }
+
     public function getCreatedAtAttribute($value)
     {
         if (!is_null($this->attributes['created_at'])) {

@@ -22,8 +22,18 @@ class CustomerSeeder extends Seeder
                 'email' => 'Alex@example.com',
                 'no_identitas' => '123456789',
                 'no_phone' => '08123456789',
-                'nama_insitusi' => 'PT. Alex',
+                'nama_insitusi' => null,
                 'address' => 'Jl. Alex',
+            ],
+            [
+                // user_id
+                'user_id' => 7,
+                'name' => 'Dude',
+                'email' => 'Dude@example.com',
+                'no_identitas' => '123456789',
+                'no_phone' => '08123456789',
+                'nama_insitusi' => 'PT. Dude',
+                'address' => 'Jl. Dude',
             ]
         ];
 

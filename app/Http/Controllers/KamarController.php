@@ -6,7 +6,7 @@ use App\Models\kamar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-// available, booked, unavailable
+// available,  unavailable
 
 class KamarController extends Controller
 {
@@ -33,7 +33,7 @@ class KamarController extends Controller
         $validatedData = Validator::make($request->all(), [
             'jenis_kamar_id' => 'required',
             // 'no_kamar' => 'required',
-            'status' => 'required|string'  // available, booked, unavailable
+            'status' => 'required|string'  // available,  unavailable
         ]);
 
         //response error validation
@@ -132,7 +132,7 @@ class KamarController extends Controller
         // validate
         $validatedData = Validator::make($request->all(), [
             'jenis_kamar_id' => 'required',
-            'status' => 'required|string'  // available, booked, unavailable
+            'status' => 'required|string'  // available, unavailable
         ]);
 
         //response error validation

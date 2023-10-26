@@ -6,28 +6,31 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class kamar extends Model
+class transaksi_fasilitas_tambahan extends Model
 {
     use HasFactory;
 
-    protected $table = 'kamars';
+    // table
+    protected $table = 'transaksi_fasilitas_tambahans';
 
+    // fillable
     protected $fillable = [
-        'jenis_kamar_id',
-        'no_kamar',
-        'status', // available, unavailable
+        'reservasi_id',
+        'fasilitas_tambahan_id',
+        'jumlah',
+        'total_harga',
     ];
 
-    // belongs to
-    public function jenis_kamar()
+    // relation to reservasi
+    public function reservasi()
     {
-        return $this->belongsTo(jenis_kamar::class, 'jenis_kamar_id');
+        return $this->belongsTo(reservasi::class, 'reservasi_id');
     }
 
-    // has many to transaksi_kamar
-    public function transaksi_kamar()
+    // relation to fasilitas_tambahan
+    public function fasilitas_tambahan()
     {
-        return $this->hasMany(transaksi_kamar::class, 'kamar_id', 'id');
+        return $this->belongsTo(fasilitas_tambahan::class, 'fasilitas_tambahan_id');
     }
 
     public function getCreatedAtAttribute($value)
