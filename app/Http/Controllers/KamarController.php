@@ -42,7 +42,7 @@ class KamarController extends Controller
         }
 
         // find data kamar
-        $kamars = kamar::with('jenis_kamar')->get();
+        $kamars = kamar::get();
 
         // count data kamar
         $count = count($kamars);
@@ -56,17 +56,11 @@ class KamarController extends Controller
             ], 200);
         }
 
-        // generate no_kamar
-        if ($count > 0) {
-            // get last no_kamar
-            $last_no_kamar = $kamars[$count - 1]->no_kamar;
-
-            // get last no_kamar
-            $no_kamar = (int) $last_no_kamar + 1;
-            $final_no_kamar = 'K' . $no_kamar;
-        } else {
-            $no_kamar = 1;
-            $final_no_kamar = 'K' . $no_kamar;
+        // generate no_kamar (format K1)
+        $final_no_kamar = 'K' . ($count + 1);
+        // jika belom ada kamar
+        if ($count == 0) {
+            $final_no_kamar = 'K1';
         }
 
         // data
