@@ -43,10 +43,10 @@ class MusimController extends Controller
         }
 
         // only date now carbon
-        $now = Carbon::now()->format('m');
+        $now = Carbon::now()->format('Y-m-d');
 
         // 2 month before start_date
-        $start_date = Carbon::parse($request->start_date)->subMonth(2)->format('m');
+        $start_date = Carbon::parse($request->start_date)->subMonth(2)->format('Y-m-d');
 
         // cant delete if 2 month before start_date
         if ($start_date <= $now) {
@@ -111,20 +111,6 @@ class MusimController extends Controller
             ], 404);
         }
 
-        // only date now carbon
-        $now = Carbon::now()->format('m');
-
-        // 2 month before start_date
-        $start_date = Carbon::parse($musim->start_date)->subMonth(2)->format('m');
-
-        // cant delete if 2 month before start_date
-        if ($start_date <= $now) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Musim cant update u need update 2 month before start_date',
-            ], 400);
-        }
-
         // validate request
         $validatedData = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -135,6 +121,20 @@ class MusimController extends Controller
         //response error validation
         if ($validatedData->fails()) {
             return response()->json(['message' => $validatedData->errors()->all()], 422);
+        }
+
+        // only date now carbon
+        $now = Carbon::now()->format('Y-m-d');
+
+        // 2 month before start_date
+        $start_date = Carbon::parse($request->start_date)->subMonth(2)->format('Y-m-d');
+
+        // cant delete if 2 month before start_date
+        if ($start_date <= $now) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Musim cant update u need update 2 month before start_date',
+            ], 400);
         }
 
         // update musim
@@ -168,10 +168,10 @@ class MusimController extends Controller
         }
 
         // only date now carbon
-        $now = Carbon::now()->format('m');
+        $now = Carbon::now()->format('Y-m-d');
 
         // 2 month before start_date
-        $start_date = Carbon::parse($musim->start_date)->subMonth(2)->format('m');
+        $start_date = Carbon::parse($musim->start_date)->subMonth(2)->format('Y-m-d');
 
         // cant delete if 2 month before start_date
         if ($start_date <= $now) {
