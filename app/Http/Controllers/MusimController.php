@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\musim;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -39,6 +40,20 @@ class MusimController extends Controller
         //response error validation
         if ($validatedData->fails()) {
             return response()->json(['message' => $validatedData->errors()->all()], 422);
+        }
+
+        // only date now carbon
+        $now = Carbon::now()->format('m');
+
+        // 2 month before start_date
+        $start_date = Carbon::parse($request->start_date)->subMonth(2)->format('m');
+
+        // cant delete if 2 month before start_date
+        if ($start_date <= $now) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Musim cant create u need create 2 month before start_date',
+            ], 400);
         }
 
         // create musim
@@ -96,6 +111,20 @@ class MusimController extends Controller
             ], 404);
         }
 
+        // only date now carbon
+        $now = Carbon::now()->format('m');
+
+        // 2 month before start_date
+        $start_date = Carbon::parse($musim->start_date)->subMonth(2)->format('m');
+
+        // cant delete if 2 month before start_date
+        if ($start_date <= $now) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Musim cant update u need update 2 month before start_date',
+            ], 400);
+        }
+
         // validate request
         $validatedData = Validator::make($request->all(), [
             'name' => 'required|string',
@@ -128,7 +157,6 @@ class MusimController extends Controller
      */
     public function destroy($id)
     {
-        // find
         $musim = musim::find($id);
 
         // if musim not exist
@@ -137,6 +165,20 @@ class MusimController extends Controller
                 'success' => false,
                 'message' => 'Musim not found',
             ], 404);
+        }
+
+        // only date now carbon
+        $now = Carbon::now()->format('m');
+
+        // 2 month before start_date
+        $start_date = Carbon::parse($musim->start_date)->subMonth(2)->format('m');
+
+        // cant delete if 2 month before start_date
+        if ($start_date <= $now) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Musim cant delete u need delete 2 month before start_date',
+            ], 400);
         }
 
         // delete musim
