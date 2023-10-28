@@ -90,7 +90,7 @@ return new class extends Migration
         Schema::create('reservasis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
-            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
+            $table->foreignId('pegawai_id')->nullable()->constrained('pegawais')->onDelete('cascade');
             $table->string('kode_booking');
             $table->date('tanggal_reservasi')->nullable();
             $table->dateTime('check_in');

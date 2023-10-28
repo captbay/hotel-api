@@ -16,7 +16,7 @@ class ReservasiSeeder extends Seeder
         $data = [
             [
                 'customer_id' => 1,
-                'pegawai_id' => 5,
+                'pegawai_id' => null,
                 'kode_booking' => 'B301223-001',
                 'tanggal_reservasi' => '2023-12-30',
                 'check_in' => '2022-12-30 14:00:00',
