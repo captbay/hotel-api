@@ -32,7 +32,7 @@ class ReservasiSeeder extends Seeder
             [
                 'customer_id' => 2,
                 'pegawai_id' => 2,
-                'kode_booking' => 'B301223-001',
+                'kode_booking' => 'B301223-002',
                 'tanggal_reservasi' => '2023-12-30',
                 'check_in' => '2022-12-30 14:00:00',
                 'check_out' => '2022-12-31 12:00:00',
