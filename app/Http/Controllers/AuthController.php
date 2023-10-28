@@ -148,39 +148,56 @@ class AuthController extends Controller
         if (Hash::check($request->password, $user->password, [])) {
             // check role
             if ($user->role == 'Customer') {
+                // get data customer
+                $customer = $user->customer;
+
                 return response()->json([
+                    'data' => $customer,
                     'message' => 'Authenticated as a Customer active',
                     'role' => 'Customer',
                     'token_type' => 'Bearer',
                     'access_token' => $token
                 ], 200);
             } else if ($user->role == 'Admin') {
+                // get data admin
+                $data = $user->pegawai;
+
                 // return
                 return response()->json([
+                    'data' => $data,
                     'message' => 'Authenticated as a Admin active',
                     'role' => 'Admin',
                     'token_type' => 'Bearer',
                     'access_token' => $token
                 ], 200);
             } else if ($user->role == 'SM') {
+                $data = $user->pegawai;
+
                 // return
                 return response()->json([
+                    'data' => $data,
                     'message' => 'Authenticated as a Sales Marketing active',
                     'role' => 'SM',
                     'token_type' => 'Bearer',
                     'access_token' => $token
                 ], 200);
             } else if ($user->role == 'Owner') {
+                $data = $user->pegawai;
+
                 // return
                 return response()->json([
+                    'data' => $data,
                     'message' => 'Authenticated as a Owner active',
                     'role' => 'Owner',
                     'token_type' => 'Bearer',
                     'access_token' => $token
                 ], 200);
             } else if ($user->role == 'FO') {
+                $data = $user->pegawai;
+
                 // return
                 return response()->json([
+                    'data' => $data,
                     'message' => 'Authenticated as a Front Office active',
                     'role' => 'FO',
                     'token_type' => 'Bearer',
