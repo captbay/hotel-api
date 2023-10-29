@@ -18,7 +18,7 @@ class ReservasiController extends Controller
         $reservasis = reservasi::with(
             'customer',
             'pegawai',
-            'transaksi_kamar.kamar',
+            'transaksi_kamar.kamar.jenis_kamar',
             'transaksi_fasilitas_tambahan.fasilitas_tambahan'
         )
             ->get();
@@ -52,7 +52,7 @@ class ReservasiController extends Controller
         $reservasis = reservasi::with(
             'customer',
             'pegawai',
-            'transaksi_kamar.kamar',
+            'transaksi_kamar.kamar.jenis_kamar',
             'transaksi_fasilitas_tambahan.fasilitas_tambahan'
         )
             ->where('customer_id', $customer_id)
@@ -83,7 +83,7 @@ class ReservasiController extends Controller
         $reservasi = reservasi::with(
             'customer',
             'pegawai',
-            'transaksi_kamar.kamar',
+            'transaksi_kamar.kamar.jenis_kamar',
             'transaksi_fasilitas_tambahan.fasilitas_tambahan'
         )
             ->find($id);
