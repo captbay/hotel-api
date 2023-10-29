@@ -56,6 +56,19 @@ class MusimController extends Controller
             ], 400);
         }
 
+        //check if start_date and end_date is exist in range musim
+        $musim = musim::whereBetween('start_date', [$request->start_date, $request->end_date])
+            ->orWhereBetween('end_date', [$request->start_date, $request->end_date])
+            ->first();
+
+        // if musim exist
+        if ($musim) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Musim in date range already exist',
+            ], 400);
+        }
+
         // create musim
         $musim = musim::create([
             'name' => $request->name,
