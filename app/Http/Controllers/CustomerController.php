@@ -62,7 +62,6 @@ class CustomerController extends Controller
             'email' => 'required|email',
             'no_identitas' => 'required|string',
             'no_phone' => 'required|regex:/^(0)8[1-9][0-9]{6,10}$/',
-            'nama_insitusi' => 'string',
             'address' => 'required|string',
         ]);
 
