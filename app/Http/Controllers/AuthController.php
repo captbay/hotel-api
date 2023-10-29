@@ -153,6 +153,7 @@ class AuthController extends Controller
 
                 return response()->json([
                     'data' => $customer,
+                    'username' => $user->username,
                     'message' => 'Authenticated as a Customer active',
                     'role' => 'Customer',
                     'token_type' => 'Bearer',
@@ -165,6 +166,7 @@ class AuthController extends Controller
                 // return
                 return response()->json([
                     'data' => $data,
+                    'username' => $user->username,
                     'message' => 'Authenticated as a Admin active',
                     'role' => 'Admin',
                     'token_type' => 'Bearer',
@@ -176,6 +178,7 @@ class AuthController extends Controller
                 // return
                 return response()->json([
                     'data' => $data,
+                    'username' => $user->username,
                     'message' => 'Authenticated as a Sales Marketing active',
                     'role' => 'SM',
                     'token_type' => 'Bearer',
@@ -187,6 +190,7 @@ class AuthController extends Controller
                 // return
                 return response()->json([
                     'data' => $data,
+                    'username' => $user->username,
                     'message' => 'Authenticated as a Owner active',
                     'role' => 'Owner',
                     'token_type' => 'Bearer',
