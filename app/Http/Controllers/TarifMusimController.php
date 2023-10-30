@@ -32,14 +32,25 @@ class TarifMusimController extends Controller
     {
         //validate request
         $validatedData = Validator::make($request->all(), [
-            'musim_id' => 'required|integer|unique:tarif_musims',
-            'jenis_kamar_id' => 'required|integer|unique:tarif_musims',
+            'musim_id' => 'required|integer',
+            'jenis_kamar_id' => 'required|integer',
             'harga' => 'required|integer'
         ]);
 
         //response error validation
         if ($validatedData->fails()) {
             return response()->json(['message' => $validatedData->errors()->all()], 422);
+        }
+
+        // find tarif musim by musim_id and jenis_kamar_id
+        $tarif_musim = tarif_musim::where('musim_id', $request->musim_id)->where('jenis_kamar_id', $request->jenis_kamar_id)->first();
+
+        // if found 
+        if ($tarif_musim) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sorry, tarif musim with musim_id ' . $request->musim_id . ' and jenis_kamar_id ' . $request->jenis_kamar_id . ' already exist'
+            ], 400);
         }
 
         //create tarif musim
@@ -107,6 +118,17 @@ class TarifMusimController extends Controller
         //response error validation
         if ($validatedData->fails()) {
             return response()->json(['message' => $validatedData->errors()->all()], 422);
+        }
+
+        // find tarif musim by musim_id and jenis_kamar_id
+        $tarif_musim = tarif_musim::where('musim_id', $request->musim_id)->where('jenis_kamar_id', $request->jenis_kamar_id)->first();
+
+        // if found 
+        if ($tarif_musim) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sorry, tarif musim with musim_id ' . $request->musim_id . ' and jenis_kamar_id ' . $request->jenis_kamar_id . ' already exist'
+            ], 400);
         }
 
         //update tarif musim
