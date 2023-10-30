@@ -61,7 +61,12 @@ class KamarController extends Controller
             $item->total_bed = $item->jenis_kamar->total_bed;
             // luas kamar
             $item->luas_kamar = $item->jenis_kamar->luas_kamar;
-
+            // nama musim
+            if (count($item->jenis_kamar->tarif_musim) == 0) {
+                $item->nama_musim = 'tidak ada musim';
+            } else {
+                $item->nama_musim = $item->jenis_kamar->tarif_musim[0]->musim->name;
+            }
             // if $item->jenis_kamar->tarif_musim = []
             if (count($item->jenis_kamar->tarif_musim) == 0) {
                 // harga

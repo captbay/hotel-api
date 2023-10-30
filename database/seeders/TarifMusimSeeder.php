@@ -23,7 +23,7 @@ class TarifMusimSeeder extends Seeder
             [
                 'jenis_kamar_id' => 2,
                 'musim_id' => 2,
-                'harga' => 1000001
+                'harga' => 20000
             ]
         ];
 
