@@ -27,6 +27,11 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('register', [AuthController::class, 'register']);
 });
 
+Route::group(['prefix' => 'kamar'], function () {
+    // get all kamar information
+    Route::get('information', [KamarController::class, 'information']);
+});
+
 Route::group(['prefix' => 'auth', 'middleware' => ['auth:sanctum']], function () {
     //logout
     Route::get('logout', [AuthController::class, 'logout']);

@@ -32,8 +32,8 @@ class TarifMusimController extends Controller
     {
         //validate request
         $validatedData = Validator::make($request->all(), [
-            'musim_id' => 'required|integer',
-            'jenis_kamar_id' => 'required|integer',
+            'musim_id' => 'required|integer|unique:tarif_musims',
+            'jenis_kamar_id' => 'required|integer|unique:tarif_musims',
             'harga' => 'required|integer'
         ]);
 
