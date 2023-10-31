@@ -207,6 +207,17 @@ class AuthController extends Controller
                     'token_type' => 'Bearer',
                     'access_token' => $token
                 ], 200);
+            } else if ($user->role == 'GM') {
+                $data = $user->pegawai;
+
+                // return
+                return response()->json([
+                    'data' => $data,
+                    'message' => 'Authenticated as a General Manager active',
+                    'role' => 'GM',
+                    'token_type' => 'Bearer',
+                    'access_token' => $token
+                ], 200);
             }
         } else {
             return response()->json([
