@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'username' => 'GeneralManager',
-                'role' => 'Admin',
+                'role' => 'GM',
             ],
             [
                 'username' => 'Owner',
