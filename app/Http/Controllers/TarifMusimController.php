@@ -121,10 +121,10 @@ class TarifMusimController extends Controller
         }
 
         // find tarif musim by musim_id and jenis_kamar_id
-        $tarif_musim = tarif_musim::where('musim_id', $request->musim_id)->where('jenis_kamar_id', $request->jenis_kamar_id)->first();
+        $tarif_musim_cek = tarif_musim::where('musim_id', $request->musim_id)->where('jenis_kamar_id', $request->jenis_kamar_id)->whereNot('id', $tarif_musim->id)->first();
 
         // if found 
-        if ($tarif_musim) {
+        if ($tarif_musim_cek) {
             return response()->json([
                 'success' => false,
                 'message' => 'Sorry, tarif musim with musim_id ' . $request->musim_id . ' and jenis_kamar_id ' . $request->jenis_kamar_id . ' already exist'
