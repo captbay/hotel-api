@@ -20,14 +20,15 @@ class reservasi extends Model
         'kode_booking',
         'tanggal_reservasi',
         'check_in',
-        'check_in',
+        'check_out',
         'status',
         'dewasa',
         'anak',
         'total_jaminan',
         'total_deposit',
         'total_harga',
-        'tanggal_pembayaran_lunas'
+        'tanggal_pembayaran_lunas',
+        'note'
     ];
 
     // relation to customer
@@ -52,6 +53,12 @@ class reservasi extends Model
     public function transaksi_fasilitas_tambahan()
     {
         return $this->hasMany(transaksi_fasilitas_tambahan::class, 'reservasi_id', 'id');
+    }
+
+    // has one invoices
+    public function invoices()
+    {
+        return $this->hasOne(invoice::class, 'reservasi_id', 'id');
     }
 
     public function getCreatedAtAttribute($value)

@@ -30,6 +30,11 @@ class TransaksiKamarSeeder extends Seeder
                 'kamar_id' => 3,
                 'total_harga' => 450000,
             ],
+            [
+                'reservasi_id' => 3,
+                'kamar_id' => 1,
+                'total_harga' => 550000,
+            ]
         ];
 
         // insert data

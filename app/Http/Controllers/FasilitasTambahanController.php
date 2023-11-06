@@ -31,7 +31,7 @@ class FasilitasTambahanController extends Controller
     {
         //validate request
         $validatedData = Validator::make($request->all(), [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:fasilitas_tambahans',
             'harga' => 'required|integer'
         ]);
 

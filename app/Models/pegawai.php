@@ -31,6 +31,18 @@ class pegawai extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    // relation to reservasi
+    public function reservasi()
+    {
+        return $this->hasMany(reservasi::class, 'pegawai_id', 'id');
+    }
+
+    // relation has many relations with invoices table
+    public function invoice()
+    {
+        return $this->hasMany(invoice::class, 'pegawai_id', 'id');
+    }
+
     public function getCreatedAtAttribute($value)
     {
         if (!is_null($this->attributes['created_at'])) {

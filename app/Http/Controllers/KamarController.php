@@ -45,7 +45,9 @@ class KamarController extends Controller
                                 ->WhereDate('end_date', '>=', Carbon::now()->format('Y-m-d'));
                         });
                 }]);
-        }])->get();
+        }])
+            ->where('status', 'available')
+            ->get();
 
         // map data to check if musim start_date is date now
         $data = $kamars->map(function ($item, $key) {
@@ -95,6 +97,153 @@ class KamarController extends Controller
             'success' => true,
             'message' => 'Daftar data kamar',
             'data' => $data
+        ], 200);
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function dashboard(Request $request)
+    {
+        // validate $request->start_date and $request->end_date if null
+        if ($request->start_date == null || $request->end_date == null) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Tanggal tidak boleh kosong',
+            ], 200);
+        }
+
+        // get data kamar by musim where start_date is date now
+        $kamars = kamar::with(['jenis_kamar' => function ($query) {
+            $query->select('id', 'name', 'bed', 'total_bed', 'luas_kamar', 'harga_default')
+                ->with(['tarif_musim' => function ($query) {
+                    $query->select('id', 'jenis_kamar_id', 'musim_id', 'harga')
+                        ->with(['musim' => function ($query) {
+                            $query->select('id', 'name', 'start_date', 'end_date');
+                        }])
+                        ->whereHas('musim', function ($query) {
+                            $query->whereDate('start_date', '<=', Carbon::now()->format('Y-m-d'))
+                                ->WhereDate('end_date', '>=', Carbon::now()->format('Y-m-d'));
+                        });
+                }]);
+        }])
+            ->with(['transaksi_kamar' => function ($query) use ($request) {
+                $query->select('id', 'reservasi_id', 'kamar_id', 'total_harga')
+                    ->with(['reservasi' => function ($query) {
+                        $query->select('id', 'customer_id', 'tanggal_reservasi', 'tanggal_end_reservasi')
+                            ->with(['customer' => function ($query) {
+                                $query->select('id', 'name', 'email');
+                            }]);
+                    }])
+                    ->whereHas('reservasi', function ($query) use ($request) {
+                        $query->whereDate('tanggal_reservasi', '<', $request->end_date) //end date
+                            ->whereDate('tanggal_end_reservasi', '>', $request->start_date); //start date
+                    });
+            }])
+            ->where('status', 'available')
+            ->get();
+
+        // map data to check if musim start_date is date now
+        $data = $kamars->map(function ($item, $key) {
+            // no kamar
+            $item->no_kamar = $item->no_kamar;
+            // status kamar
+            $item->status = $item->status;
+            // nama kamar
+            $item->nama_kamar = $item->jenis_kamar->name;
+            // tipe bed
+            $item->tipe_bed = $item->jenis_kamar->bed;
+            // total bed
+            $item->total_bed = $item->jenis_kamar->total_bed;
+            // luas kamar
+            $item->luas_kamar = $item->jenis_kamar->luas_kamar;
+            // nama musim
+            if (count($item->jenis_kamar->tarif_musim) == 0) {
+                $item->nama_musim = 'tidak ada musim';
+            } else {
+                $item->nama_musim = $item->jenis_kamar->tarif_musim[0]->musim->name;
+            }
+            // if $item->jenis_kamar->tarif_musim = []
+            if (count($item->jenis_kamar->tarif_musim) == 0) {
+                // harga
+                $item->harga = $item->jenis_kamar->harga_default;
+            } else {
+                // harga
+                $item->harga = $item->jenis_kamar->tarif_musim[0]->harga;
+            }
+
+            return $item;
+        });
+
+        // unset useless data
+        $data = $data->map(function ($item, $key) {
+
+            if (count($item->transaksi_kamar) != 0) {
+                unset($item);
+            } else {
+                // unset($item->id);
+                unset($item->jenis_kamar_id);
+                unset($item->created_at);
+                unset($item->updated_at);
+                unset($item->jenis_kamar);
+                unset($item->transaksi_kamar);
+                return $item;
+            }
+        });
+
+        // filter data null not show/remove
+        $data = $data->filter(function ($item) {
+            return !is_null($item);
+        })->values()->all();
+
+        // Group data by 'nama_kamar' and 'tipe_bed'
+        $groupedData = collect($data)->groupBy(function ($item) {
+            return $item->nama_kamar . '-'
+                . $item->tipe_bed . '-'
+                . $item->total_bed . '-'
+                . $item->nama_musim . '-'
+                . $item->luas_kamar . '-'
+                . $item->harga;
+        });
+
+        // Initialize an array to store the grouped result
+        $result = [];
+
+        // Loop through the grouped data and calculate the count
+        $groupedData->each(function ($items, $key) use (&$result) {
+            list($namaKamar, $tipeBed, $total_bed, $nama_musim, $luas_kamar, $harga) = explode('-', $key);
+
+            // unset attribute at items
+            $items = collect($items)->map(function ($item) {
+                unset($item->nama_kamar);
+                unset($item->tipe_bed);
+                unset($item->total_bed);
+                unset($item->nama_musim);
+                unset($item->luas_kamar);
+                unset($item->status);
+                unset($item->harga);
+                return $item;
+            })->values()->all();
+
+            $result[] = [
+                'nama_kamar' => $namaKamar,
+                'tipe_bed' => $tipeBed,
+                'total_bed' => $total_bed,
+                'nama_musim' => $nama_musim,
+                'luas_kamar' => $luas_kamar,
+                'harga' => $harga,
+                'ketersediaan' => count($items),
+                'data_kamar' => $items,
+            ];
+        });
+
+
+        // return api
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar data kamar',
+            'data' => $result
         ], 200);
     }
 
@@ -160,7 +309,35 @@ class KamarController extends Controller
     public function show($id)
     {
         // show data by id
-        $kamar = kamar::with('jenis_kamar')->find($id);
+        $kamar = kamar::with(['jenis_kamar' => function ($query) {
+            $query->select('id', 'name', 'bed', 'total_bed', 'luas_kamar', 'harga_default')
+                ->with(['tarif_musim' => function ($query) {
+                    $query->select('id', 'jenis_kamar_id', 'musim_id', 'harga')
+                        ->with(['musim' => function ($query) {
+                            $query->select('id', 'name', 'start_date', 'end_date');
+                        }])
+                        ->whereHas('musim', function ($query) {
+                            $query->whereDate('start_date', '<=', Carbon::now()->format('Y-m-d'))
+                                ->WhereDate('end_date', '>=', Carbon::now()->format('Y-m-d'));
+                        });
+                }]);
+        }])->find($id);
+
+        if (count($kamar->jenis_kamar->tarif_musim) == 0) {
+            $kamar->nama_musim = 'tidak ada musim';
+        } else {
+            $kamar->nama_musim = $kamar->jenis_kamar->tarif_musim[0]->musim->name;
+        }
+        // if $kamar->jenis_kamar->tarif_musim = []
+        if (count($kamar->jenis_kamar->tarif_musim) == 0) {
+            // harga
+            $kamar->jenis_kamar->harga_default = $kamar->jenis_kamar->harga_default;
+        } else {
+            // harga
+            $kamar->jenis_kamar->harga_default = $kamar->jenis_kamar->tarif_musim[0]->harga;
+        }
+
+        unset($kamar->jenis_kamar->tarif_musim);
 
         // if data null
         if ($kamar == null) {

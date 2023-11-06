@@ -34,5 +34,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TransaksiKamarSeeder::class);
         // run transaksi fasilitas tambahan seeds
         $this->call(TransaksiFasilitasTambahanSeeder::class);
+        // run invoice seeds
+        $this->call(InvoiceSeeder::class);
     }
 }

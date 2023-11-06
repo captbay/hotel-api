@@ -6,38 +6,34 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class customer extends Model
+class invoice extends Model
 {
     use HasFactory;
 
     // table
-    protected $table = 'customers';
+    protected $table = 'invoices';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // fillable
     protected $fillable = [
-        'user_id',
-        'name',
-        'email',
-        'no_identitas',
-        'no_phone',
-        'nama_insitusi',
-        'address',
+        'reservasi_id',
+        'pegawai_id',
+        'no_invoice',
+        'tanggal_lunas_nota',
+        'total_harga',
+        'total_pajak',
+        'total_pembayaran'
     ];
-
-    // relation with users table
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 
     // relation to reservasi
     public function reservasi()
     {
-        return $this->hasMany(reservasi::class, 'customer_id', 'id');
+        return $this->belongsTo(reservasi::class, 'reservasi_id');
+    }
+
+    // relation to pegawai
+    public function pegawai()
+    {
+        return $this->belongsTo(pegawai::class, 'pegawai_id');
     }
 
     public function getCreatedAtAttribute($value)

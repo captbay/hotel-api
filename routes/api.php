@@ -50,6 +50,8 @@ Route::group(['prefix' => 'user-management', 'middleware' => ['auth:sanctum']], 
 
 // kamar
 Route::group(['prefix' => 'kamar', 'middleware' => ['auth:sanctum']], function () {
+    // dashboard
+    Route::get('dashboard', [KamarController::class, 'dashboard']);
     // get all kamar
     Route::get('all', [KamarController::class, 'index']);
     // get kamar by id
