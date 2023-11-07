@@ -224,7 +224,7 @@ class ReservasiController extends Controller
 
 
         // TODO: kurang jumlah kamar per nama kamar yang sama
-
+        // make new collection to save where jenis_kamar->name is same in $reservasi->transaksi_kamar->kamar->jenis_kamar->name
 
         $data = [
             'reservasi' => $reservasi,

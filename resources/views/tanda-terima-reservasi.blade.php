@@ -51,7 +51,9 @@
         <div class="header">
             <div class="logo">
                 <img
-                    src="https://firebasestorage.googleapis.com/v0/b/capstone-cdb77.appspot.com/o/logo.png?alt=media&token=c134b6af-1e0d-434e-b381-dcd077196515">
+                    alt="GRAND HOTEL ATMA"
+                    src="https://firebasestorage.googleapis.com/v0/b/capstone-cdb77.appspot.com/o/logo.png?alt=media&token=c134b6af-1e0d-434e-b381-dcd077196515"
+                    >
             </div>
             <p>Jl. P. Mangkubumi No.18, Yogyakarta 55233</p>
             <p>Telp. (0274) 487711</p>
@@ -130,6 +132,7 @@
         <div style="margin-top: 8px">
             <table style="border: 1px solid black; border-collapse: collapse;">
                 <tr>
+                    <th style="border: 1px solid black; border-collapse: collapse; padding: 5px;">No Kamar</th>
                     <th style="border: 1px solid black; border-collapse: collapse; padding: 5px;">Jenis Kamar</th>
                     <th style="border: 1px solid black; border-collapse: collapse; padding: 5px;">Bed</th>
                     <th style="border: 1px solid black; border-collapse: collapse; padding: 5px;">Jumlah</th>
@@ -138,6 +141,7 @@
                 </tr>
                 @foreach ($reservasi->transaksi_kamar as $kamar)
                     <tr>
+                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;"> {{$kamar->kamar['no_kamar']}} </td>
                         <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;"> {{$kamar->kamar->jenis_kamar['name']}} </td>
                         <td style="border: 1px solid black;  border-collapse: collapse; padding: 5px;"> {{$kamar->kamar->jenis_kamar['bed']}} </td>
                         <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;"> 1 </td>
@@ -147,7 +151,7 @@
                 @endforeach
     
                 <tr>
-                    <td colspan="4" style="text-align: right; border: 1px solid black; padding: 5px;">Total</td>
+                    <td colspan="5" style="text-align: right; border: 1px solid black; padding: 5px;">Total</td>
                     <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">{{ number_format($reservasi->total_harga, 0, ',', '.') }}</td>
                 </tr>
             </table>
