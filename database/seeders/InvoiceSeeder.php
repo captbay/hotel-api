@@ -17,6 +17,7 @@ class InvoiceSeeder extends Seeder
         $data = [
             [
                 'reservasi_id' => 1,
+                'pegawai_id' => 5,
                 'no_invoice' => 'P301223-001',
                 'tanggal_lunas_nota' => '2022-12-31',
                 'total_harga' => 650000,
@@ -25,6 +26,7 @@ class InvoiceSeeder extends Seeder
             ],
             [
                 'reservasi_id' => 2,
+                'pegawai_id' => 5,
                 'no_invoice' => 'G301223-002',
                 'tanggal_lunas_nota' => '2022-12-31',
                 'total_harga' => 1450000,
