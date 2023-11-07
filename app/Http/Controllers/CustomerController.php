@@ -25,6 +25,20 @@ class CustomerController extends Controller
         ], 200);
     }
 
+    // get customer grup
+    public function indexGrup()
+    {
+        // customer with user
+        $customers = customer::with('user')->where('nama_insitusi', '!=', null)->get();
+
+        // return response
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar data customer grup',
+            'data' => $customers
+        ], 200);
+    }
+
     /**
      * Display the specified resource.
      */

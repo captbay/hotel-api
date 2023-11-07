@@ -160,13 +160,13 @@ class ReservasiController extends Controller
                 'kode_booking' => $no_booking,
                 'tanggal_reservasi' => $request->tanggal_reservasi,
                 'tanggal_end_reservasi' => $request->tanggal_end_reservasi,
-                'status' => 'belum cekin', //belum cek in
+                'status' => 'belom bayar jaminan', //belum cek in
                 'dewasa' => $request->dewasa,
                 'anak' => $request->anak,
                 'total_jaminan' => $total_harga_jaminan, // ini harga yang bakal dibayar dulu
                 // 'total_deposit' => null, //setelah cek in diminta 300k
                 'total_harga' => $total_harga,
-                'tanggal_pembayaran_lunas' => Carbon::now()->format('Y-m-d'), //setelah cek out baru lunas kalo grup
+                //'tanggal_pembayaran_lunas' => null, //setelah cek out baru lunas kalo grup
                 'note' => $request->note,
             ]);
         }
@@ -222,6 +222,10 @@ class ReservasiController extends Controller
         $reservasi->tanggal_end_reservasi = Carbon::parse($reservasi->tanggal_end_reservasi)->format('d/M/Y');
         $reservasi->tanggal_pembayaran_lunas = Carbon::parse($reservasi->tanggal_pembayaran_lunas)->format('d/M/Y');
 
+
+        // TODO: kurang jumlah kamar per nama kamar yang sama
+
+
         $data = [
             'reservasi' => $reservasi,
             'tanggal_sekarang' => $tanggal_sekarang
@@ -261,6 +265,147 @@ class ReservasiController extends Controller
             'success' => true,
             'message' => 'Detail data reservasi',
             'data' => $reservasi
+        ], 200);
+    }
+
+    // show reservasi yang bisa dibatalkan
+    public function cancelList()
+    {
+        // find data reservasi where can cancel
+        //get
+        $reservasis = reservasi::with(
+            'customer',
+            'pegawai',
+            'transaksi_kamar.kamar.jenis_kamar',
+            'transaksi_fasilitas_tambahan.fasilitas_tambahan'
+        )
+            ->where('status', 'belum cekin')
+            ->orWhere('status', 'cancel')
+            ->get();
+
+        // return api
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar data reservasi yang bisa di cancel',
+            'data' => $reservasis
+        ], 200);
+    }
+
+    // put pembatalan reservasi menggunakan id reservasi
+    public function cancel($id)
+    {
+        // find data reservasi
+        $reservasi = reservasi::find($id);
+
+        // if data reservasi null
+        if (!$reservasi) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Data reservasi tidak ditemukan',
+            ], 404);
+        }
+
+        // if date now > tanggal_reservasi
+        if (
+            Carbon::now()->format('Y-m-d') >
+            Carbon::parse($reservasi->tanggal_reservasi)->format('Y-m-d')
+        ) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Reservasi tidak bisa dibatalkan, karena tanggal hari ini melebihi tanggal reservasi',
+            ], 400);
+        }
+
+        // update data reservasi
+        $reservasi->update([
+            'status' => 'cancel'
+        ]);
+
+        // uang jaminan = 0 ketika maksimal seminggu sebelum tanggal_reservasi
+        if (
+            Carbon::now()->format('Y-m-d') >
+            Carbon::parse($reservasi->tanggal_reservasi)->subDays(7)->format('Y-m-d')
+        ) {
+            $reservasi->update([
+                'total_jaminan' => 0
+            ]);
+
+            // return api
+            return response()->json([
+                'success' => true,
+                'message' => 'Reservasi berhasil dibatalkan dan uang anda dibalikan',
+            ], 200);
+        } else {
+            // return api
+            return response()->json([
+                'success' => true,
+                'message' => 'Reservasi berhasil dibatalkan',
+            ], 200);
+        }
+    }
+
+    // show reservasi yang bisa dibatalkan
+    public function listReservasiGrup()
+    {
+        // find data reservasi where can cancel
+        //get
+        $reservasis = reservasi::with(
+            'customer',
+            'pegawai',
+            'transaksi_kamar.kamar.jenis_kamar',
+            'transaksi_fasilitas_tambahan.fasilitas_tambahan'
+        )
+            ->whereNot('pegawai_id', null)
+            ->where('status', 'belom bayar jaminan')
+            ->get();
+
+        // return api
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar data reservasi grup',
+            'data' => $reservasis
+        ], 200);
+    }
+
+    // input uang jaminan grup
+    public function inputJaminanGrup($id)
+    {
+        // find data reservasi id
+        $reservasi = reservasi::find($id);
+
+        // if data reservasi null
+        if (!$reservasi) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Data reservasi tidak ditemukan',
+            ], 404);
+        }
+
+        // batas bayar  maksimal seminggu sebelum tanggal_checkin
+        if (
+            Carbon::now()->format('Y-m-d') >
+            Carbon::parse($reservasi->tanggal_reservasi)->subDays(7)->format('Y-m-d')
+        ) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Batas pembayaran jaminan sudah lewat',
+            ], 400);
+        }
+
+        // update data reservasi
+        $reservasi->update([
+            'status' => 'belum cekin',
+            'tanggal_pembayaran_lunas' => Carbon::now()->format('Y-m-d'),
+        ]);
+
+        // return api
+        return response()->json([
+            'success' => true,
+            'message' => 'Jaminan berhasil dibayar',
         ], 200);
     }
 

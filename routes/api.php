@@ -117,6 +117,8 @@ Route::group(['prefix' => 'tarif-musim', 'middleware' => ['auth:sanctum']], func
 Route::group(['prefix' => 'customer', 'middleware' => ['auth:sanctum']], function () {
     // get all customer
     Route::get('all', [CustomerController::class, 'index']);
+    // get customer grup
+    Route::get('grup', [CustomerController::class, 'indexGrup']);
     // get customer by id
     Route::get('get/{id}', [CustomerController::class, 'show']);
     // update customer
@@ -136,6 +138,14 @@ Route::group(['prefix' => 'reservasi', 'middleware' => ['auth:sanctum']], functi
     Route::post('create', [ReservasiController::class, 'create']);
     // create tanda terima reservasi
     Route::get('create/tanda-terima/{id}', [ReservasiController::class, 'createTandaTerima']);
+    // show list reservasi yang bisa dibatalkan
+    Route::get('cancel/list', [ReservasiController::class, 'cancelList']);
+    // put pembatalan pemesanan
+    Route::put('cancel/{id}', [ReservasiController::class, 'cancel']);
+    // list reservasi grup
+    Route::get('grup/list', [ReservasiController::class, 'listReservasiGrup']);
+    // input uang jaminan grup
+    Route::put('grup/jaminan/{id}', [ReservasiController::class, 'inputJaminanGrup']);
     // // update reservasi
     // Route::put('update/{id}', [ReservasiController::class, 'update']);
     // // delete reservasi

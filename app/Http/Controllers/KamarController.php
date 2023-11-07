@@ -150,7 +150,8 @@ class KamarController extends Controller
                     }])
                     ->whereHas('reservasi', function ($query) use ($request) {
                         $query->whereDate('tanggal_reservasi', '<', Carbon::parse($request->end_date)->format('Y-m-d')) //end date
-                            ->whereDate('tanggal_end_reservasi', '>', Carbon::parse($request->start_date)->format('Y-m-d')); //start date
+                            ->whereDate('tanggal_end_reservasi', '>', Carbon::parse($request->start_date)->format('Y-m-d')) //start date
+                            ->whereNot('status', 'cancel');
                     });
             }])
             ->where('status', 'available')
