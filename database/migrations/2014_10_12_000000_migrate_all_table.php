@@ -130,6 +130,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reservasi_id')->constrained('reservasis')->onDelete('cascade');
+            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
             $table->string('no_invoice');
             $table->date('tanggal_lunas_nota');
             $table->integer('total_harga');
