@@ -19,6 +19,7 @@ class reservasi extends Model
         'pegawai_id',
         'kode_booking',
         'tanggal_reservasi',
+        'tanggal_end_reservasi',
         'check_in',
         'check_out',
         'status',

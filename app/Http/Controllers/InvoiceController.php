@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\invoice;
 use App\Http\Requests\StoreinvoiceRequest;
 use App\Http\Requests\UpdateinvoiceRequest;
+use App\Models\reservasi;
+use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
@@ -19,31 +21,14 @@ class InvoiceController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreinvoiceRequest $request)
-    {
-        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(invoice $invoice)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(invoice $invoice)
+    public function show($id)
     {
         //
     }
@@ -51,7 +36,7 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateinvoiceRequest $request, invoice $invoice)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -59,7 +44,7 @@ class InvoiceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(invoice $invoice)
+    public function destroy($id)
     {
         //
     }

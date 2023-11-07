@@ -22,7 +22,7 @@ class ReservasiSeeder extends Seeder
                 'tanggal_end_reservasi' => '2023-12-31',
                 'check_in' => '2022-12-30 14:00:00',
                 'check_out' => '2022-12-31 12:00:00',
-                'status' => 'ongoing',
+                'status' => 'sudah cekin',
                 'dewasa' => 2,
                 'anak' => 0,
                 'total_jaminan' => 550000, //50% dari total harga (grup) && (personal 100%)
@@ -38,7 +38,7 @@ class ReservasiSeeder extends Seeder
                 'tanggal_end_reservasi' => '2023-12-31',
                 'check_in' => '2022-12-30 14:00:00',
                 'check_out' => '2022-12-31 12:00:00',
-                'status' => 'ongoing',
+                'status' => 'sudah cekin',
                 'dewasa' => 2,
                 'anak' => 2,
                 'total_jaminan' => 425000, //50% dari total harga (grup) && (personal 100%)
@@ -49,18 +49,18 @@ class ReservasiSeeder extends Seeder
             [
                 'customer_id' => 1,
                 'pegawai_id' => null,
-                'kode_booking' => 'P301223-002',
+                'kode_booking' => 'P051123-003',
                 'tanggal_reservasi' => '2023-11-05',
                 'tanggal_end_reservasi' => '2023-11-06',
                 'check_in' => '2022-11-05 14:00:00',
                 'check_out' => '2022-11-06 12:00:00',
-                'status' => 'ongoing',
+                'status' => 'sudah cekin',
                 'dewasa' => 2,
                 'anak' => 0,
                 'total_jaminan' => 550000, //50% dari total harga (grup) && (personal 100%)
                 'total_deposit' => 300000,
                 'total_harga' => 650000,
-                'tanggal_pembayaran_lunas' => '2022-12-31',
+                'tanggal_pembayaran_lunas' => '2022-11-05',
             ]
         ];
 

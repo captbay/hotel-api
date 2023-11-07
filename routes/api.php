@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\FasilitasTambahanController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JenisKamarController;
 use App\Http\Controllers\KamarController;
 use App\Http\Controllers\MusimController;
@@ -131,10 +132,26 @@ Route::group(['prefix' => 'reservasi', 'middleware' => ['auth:sanctum']], functi
 
     // get all reservasi khusu cust login
     Route::get('all/customer', [ReservasiController::class, 'indexCustomer']);
-    // // create reservasi
-    // Route::post('create', [ReservasiController::class, 'create']);
+    // create reservasi
+    Route::post('create', [ReservasiController::class, 'create']);
+    // create tanda terima reservasi
+    Route::get('create/tanda-terima/{id}', [ReservasiController::class, 'createTandaTerima']);
     // // update reservasi
     // Route::put('update/{id}', [ReservasiController::class, 'update']);
     // // delete reservasi
     // Route::delete('delete/{id}', [ReservasiController::class, 'destroy']);
+});
+
+// invoice
+Route::group(['prefix' => 'invoice', 'middleware' => ['auth:sanctum']], function () {
+    // get all invoice
+    // Route::get('all', [InvoiceController::class, 'index']);
+    // get invoice by id
+    // Route::get('get/{id}', [InvoiceController::class, 'show']);
+    // create invoice
+    // Route::post('create/{id}', [InvoiceController::class, 'create']);
+    // update invoice
+    // Route::put('update/{id}', [InvoiceController::class, 'update']);
+    // delete invoice
+    // Route::delete('delete/{id}', [InvoiceController::class, 'destroy']);
 });

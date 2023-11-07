@@ -111,7 +111,19 @@ class KamarController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Tanggal tidak boleh kosong',
-            ], 200);
+            ], 422);
+        }
+
+        // validate $request->start_date must after date now and $request->end_date must after $request->start_date
+        if (
+            Carbon::now()->format('Y-m-d') > Carbon::parse($request->start_date)->format('Y-m-d')
+            || $request->start_date > $request->end_date
+        ) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Tanggal tidak valid',
+            ], 422);
         }
 
         // get data kamar by musim where start_date is date now
@@ -137,8 +149,8 @@ class KamarController extends Controller
                             }]);
                     }])
                     ->whereHas('reservasi', function ($query) use ($request) {
-                        $query->whereDate('tanggal_reservasi', '<', $request->end_date) //end date
-                            ->whereDate('tanggal_end_reservasi', '>', $request->start_date); //start date
+                        $query->whereDate('tanggal_reservasi', '<', Carbon::parse($request->end_date)->format('Y-m-d')) //end date
+                            ->whereDate('tanggal_end_reservasi', '>', Carbon::parse($request->start_date)->format('Y-m-d')); //start date
                     });
             }])
             ->where('status', 'available')

@@ -56,7 +56,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('jenis_kamar_id')->constrained('jenis_kamars')->onDelete('cascade');
             $table->string('no_kamar');
-            $table->string('status'); // available, booked, unavailable
+            $table->string('status'); // available, unavailable
             $table->timestamps();
         });
 
@@ -94,15 +94,15 @@ return new class extends Migration
             $table->string('kode_booking');
             $table->date('tanggal_reservasi');
             $table->date('tanggal_end_reservasi');
-            $table->dateTime('check_in');
-            $table->dateTime('check_out');
-            $table->string('status'); // success, ongoing, cancel
+            $table->dateTime('check_in')->nullable();
+            $table->dateTime('check_out')->nullable();
+            $table->string('status'); // belum cekin, sudah cekin, cancel, selesai
             $table->integer('dewasa');
             $table->integer('anak');
             $table->integer('total_jaminan')->nullable();
             $table->integer('total_deposit')->nullable();
             $table->integer('total_harga');
-            $table->date('tanggal_pembayaran_lunas')->nullable();
+            $table->date('tanggal_pembayaran_lunas')->nullable(); //setiap dia bayar catet disini mau lunas atau ga
             $table->string('note')->nullable();
             $table->timestamps();
         });
@@ -130,11 +130,10 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('reservasi_id')->constrained('reservasis')->onDelete('cascade');
-            $table->foreignId('pegawai_id')->constrained('pegawais')->onDelete('cascade');
             $table->string('no_invoice');
             $table->date('tanggal_lunas_nota');
             $table->integer('total_harga');
-            $table->integer('total_pajak');
+            $table->integer('total_pajak'); // ?? dari total harga
             $table->integer('total_pembayaran');
             $table->timestamps();
         });
