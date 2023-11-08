@@ -50,10 +50,8 @@
     <div class="container">
         <div class="header">
             <div class="logo">
-                <img
-                    alt="GRAND HOTEL ATMA"
-                    src="https://firebasestorage.googleapis.com/v0/b/capstone-cdb77.appspot.com/o/logo.png?alt=media&token=c134b6af-1e0d-434e-b381-dcd077196515"
-                    >
+                <img alt="GRAND HOTEL ATMA"
+                    src="https://firebasestorage.googleapis.com/v0/b/capstone-cdb77.appspot.com/o/logo.png?alt=media&token=c134b6af-1e0d-434e-b381-dcd077196515">
             </div>
             <p>Jl. P. Mangkubumi No.18, Yogyakarta 55233</p>
             <p>Telp. (0274) 487711</p>
@@ -126,7 +124,7 @@
         </div>
         <div class="content">
             <div class="item">
-                <span><br/></span>
+                <span><br /></span>
             </div>
         </div>
         <div style="margin-top: 8px">
@@ -141,19 +139,33 @@
                 </tr>
                 @foreach ($reservasi->transaksi_kamar as $kamar)
                     <tr>
-                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;"> {{$kamar->kamar['no_kamar']}} </td>
-                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;"> {{$kamar->kamar->jenis_kamar['name']}} </td>
-                        <td style="border: 1px solid black;  border-collapse: collapse; padding: 5px;"> {{$kamar->kamar->jenis_kamar['bed']}} </td>
+                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
+                            {{ $kamar->kamar['no_kamar'] }} </td>
+                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
+                            {{ $kamar->kamar->jenis_kamar['name'] }} </td>
+                        <td style="border: 1px solid black;  border-collapse: collapse; padding: 5px;">
+                            {{ $kamar->kamar->jenis_kamar['bed'] }} </td>
                         <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;"> 1 </td>
-                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;"> {{number_format($kamar->total_harga, 0, ',', '.')}} </td>
-                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;"> {{number_format($kamar->total_harga, 0, ',', '.')}} </td>
+                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
+                            {{ number_format($kamar->total_harga, 0, ',', '.') }} </td>
+                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
+                            {{ number_format($kamar->total_harga, 0, ',', '.') }} </td>
                     </tr>
                 @endforeach
-    
+
                 <tr>
                     <td colspan="5" style="text-align: right; border: 1px solid black; padding: 5px;">Total</td>
-                    <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">{{ number_format($reservasi->total_harga, 0, ',', '.') }}</td>
+                    <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
+                        {{ number_format($reservasi->total_harga, 0, ',', '.') }}</td>
                 </tr>
+                @if ($reservasi->pegawai_id != null)
+                    <tr>
+                        <td colspan="5" style="text-align: right; border: 1px solid black; padding: 5px;">Uang
+                            Jaminan</td>
+                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
+                            {{ number_format($reservasi->total_jaminan, 0, ',', '.') }}</td>
+                    </tr>
+                @endif
             </table>
         </div>
         <div class="footer" style="margin-top: 32px">
