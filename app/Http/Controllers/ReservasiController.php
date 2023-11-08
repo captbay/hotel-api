@@ -86,7 +86,7 @@ class ReservasiController extends Controller
             'tanggal_end_reservasi' => 'required|date',
             'dewasa' => 'required|integer',
             'anak' => 'required|integer',
-            'note' => 'required|string',
+            'note' => 'string',
             'kamar' => 'required|array',
             'kamar.*.kamar_id' => 'required|integer',
             'kamar.*.total_harga' => 'required|integer',
