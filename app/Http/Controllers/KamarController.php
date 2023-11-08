@@ -127,16 +127,16 @@ class KamarController extends Controller
         }
 
         // get data kamar by musim where start_date is date now
-        $kamars = kamar::with(['jenis_kamar' => function ($query) {
+        $kamars = kamar::with(['jenis_kamar' => function ($query) use ($request) {
             $query->select('id', 'name', 'bed', 'total_bed', 'luas_kamar', 'harga_default')
-                ->with(['tarif_musim' => function ($query) {
+                ->with(['tarif_musim' => function ($query) use ($request) {
                     $query->select('id', 'jenis_kamar_id', 'musim_id', 'harga')
                         ->with(['musim' => function ($query) {
                             $query->select('id', 'name', 'start_date', 'end_date');
                         }])
-                        ->whereHas('musim', function ($query) {
-                            $query->whereDate('start_date', '<=', Carbon::now()->format('Y-m-d'))
-                                ->WhereDate('end_date', '>=', Carbon::now()->format('Y-m-d'));
+                        ->whereHas('musim', function ($query) use ($request) {
+                            $query->whereDate('start_date', '<=', Carbon::parse($request->start_date)->format('Y-m-d'))
+                                ->WhereDate('end_date', '>=', Carbon::parse($request->end_date)->format('Y-m-d'));
                         });
                 }]);
         }])
