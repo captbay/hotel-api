@@ -138,7 +138,7 @@ class ReservasiController extends Controller
                 'kode_booking' => $no_booking,
                 'tanggal_reservasi' => $request->tanggal_reservasi,
                 'tanggal_end_reservasi' => $request->tanggal_end_reservasi,
-                'status' => 'belum cekin', //belum cek in
+                'status' => 'belum bayar jaminan', //belum cekin nantian
                 'dewasa' => $request->dewasa,
                 'anak' => $request->anak,
                 'total_jaminan' => $total_harga,  // ini harga yang bakal dibayar dulu
@@ -208,6 +208,11 @@ class ReservasiController extends Controller
         )
             ->find($id);
 
+        // update status belum cekin
+        $reservasi->update([
+            'status' => 'belum cekin'
+        ]);
+
         //if data reservasi null
         if (!$reservasi) {
             // return api
@@ -233,7 +238,7 @@ class ReservasiController extends Controller
 
         $pdf = Pdf::loadview('tanda-terima-reservasi', $data);
 
-        // return $pdf->output(); //ketika data sudah fix fi download 
+        // return $pdf->output();
         return $pdf->stream();
     }
 
