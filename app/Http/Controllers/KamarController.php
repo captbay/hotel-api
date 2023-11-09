@@ -117,7 +117,7 @@ class KamarController extends Controller
         // validate $request->start_date must after date now and $request->end_date must after $request->start_date
         if (
             Carbon::now()->format('Y-m-d') > Carbon::parse($request->start_date)->format('Y-m-d')
-            || $request->start_date > $request->end_date
+            || $request->start_date >= $request->end_date
         ) {
             // return api
             return response()->json([
