@@ -238,6 +238,7 @@ class ReservasiController extends Controller
 
         $pdf = Pdf::loadview('tanda-terima-reservasi', $data);
 
+        // return $pdf->download('invoice.pdf');
         // return $pdf->output();
         return $pdf->stream();
     }
