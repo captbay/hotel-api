@@ -448,6 +448,18 @@ class ReservasiController extends Controller
         //     ], 400);
         // }
 
+        // if date now > tanggal_reservasi
+        if (
+            Carbon::now()->format('Y-m-d') >
+            Carbon::parse($reservasi->tanggal_reservasi)->format('Y-m-d')
+        ) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Reservasi tidak bisa dibayar, karena tanggal hari ini melebihi tanggal reservasi',
+            ], 400);
+        }
+
         // update data reservasi
         $reservasi->update([
             'status' => 'belum cekin',
