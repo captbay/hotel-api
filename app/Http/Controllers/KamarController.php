@@ -251,6 +251,14 @@ class KamarController extends Controller
             ];
         });
 
+        // if result = []
+        if (count($result) == 0) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada kamar yang tersedia',
+            ], 404);
+        }
 
         // return api
         return response()->json([

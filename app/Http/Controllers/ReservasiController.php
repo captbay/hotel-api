@@ -25,6 +25,7 @@ class ReservasiController extends Controller
             'transaksi_kamar.kamar.jenis_kamar',
             'transaksi_fasilitas_tambahan.fasilitas_tambahan'
         )
+            ->whereNot('pegawai_id', null)
             ->get();
 
         // return api
@@ -75,7 +76,7 @@ class ReservasiController extends Controller
      */
     public function create(Request $request)
     {
-        // TODO:fasilitan tambahan berbayar belom disini, dia dibuat sama FO
+        // TODO:fasilitan tambahan berbayar belum disini, dia dibuat sama FO
         // TODO:sekarang itu cuma note aja
 
         // validate request
@@ -160,10 +161,10 @@ class ReservasiController extends Controller
                 'kode_booking' => $no_booking,
                 'tanggal_reservasi' => $request->tanggal_reservasi,
                 'tanggal_end_reservasi' => $request->tanggal_end_reservasi,
-                'status' => 'belom bayar jaminan', //belum cek in
+                'status' => 'belum bayar jaminan', //belum cek in
                 'dewasa' => $request->dewasa,
                 'anak' => $request->anak,
-                'total_jaminan' => $total_harga_jaminan, // ini harga yang bakal dibayar dulu
+                'total_jaminan' => null, // ini harga 50% dari total_harga
                 // 'total_deposit' => null, //setelah cek in diminta 300k
                 'total_harga' => $total_harga,
                 //'tanggal_pembayaran_lunas' => null, //setelah cek out baru lunas kalo grup
@@ -329,9 +330,17 @@ class ReservasiController extends Controller
             'status' => 'cancel'
         ]);
 
+        if ($reservasi->total_jaminan == null) {
+            // return api
+            return response()->json([
+                'success' => true,
+                'message' => 'Reservasi berhasil dibatalkan karena tidak bayar sesuai waktu',
+            ], 200);
+        }
+
         // uang jaminan = 0 ketika maksimal seminggu sebelum tanggal_reservasi
         if (
-            Carbon::now()->format('Y-m-d') >
+            Carbon::now()->format('Y-m-d') <
             Carbon::parse($reservasi->tanggal_reservasi)->subDays(7)->format('Y-m-d')
         ) {
             $reservasi->update([
@@ -347,7 +356,7 @@ class ReservasiController extends Controller
             // return api
             return response()->json([
                 'success' => true,
-                'message' => 'Reservasi berhasil dibatalkan',
+                'message' => 'Reservasi berhasil dibatalkan, uang tidak dibalikan',
             ], 200);
         }
     }
@@ -364,7 +373,7 @@ class ReservasiController extends Controller
             'transaksi_fasilitas_tambahan.fasilitas_tambahan'
         )
             ->whereNot('pegawai_id', null)
-            ->where('status', 'belom bayar jaminan')
+            ->where('status', 'belum bayar jaminan')
             ->get();
 
         // return api
@@ -376,7 +385,7 @@ class ReservasiController extends Controller
     }
 
     // input uang jaminan grup
-    public function inputJaminanGrup($id)
+    public function inputJaminanGrup(Request $request, $id)
     {
         // find data reservasi id
         $reservasi = reservasi::find($id);
@@ -390,21 +399,59 @@ class ReservasiController extends Controller
             ], 404);
         }
 
-        // batas bayar  maksimal seminggu sebelum tanggal_checkin
-        if (
-            Carbon::now()->format('Y-m-d') >
-            Carbon::parse($reservasi->tanggal_reservasi)->subDays(7)->format('Y-m-d')
-        ) {
+        if ($reservasi->pegawai_id == null) {
             // return api
             return response()->json([
                 'success' => false,
-                'message' => 'Batas pembayaran jaminan sudah lewat',
+                'message' => 'Khusus reservasi grup',
+            ], 404);
+        }
+
+        // validate request Uang jaminan harus int
+        $validatedData = Validator::make($request->all(), [
+            'uang_jaminan' => 'required|integer',
+        ]);
+
+        // if validate failed
+        if ($validatedData->fails()) {
+            return response()->json(['message' => $validatedData->errors()->all()], 422);
+        }
+
+        // validate request Uang jaminan minimal 50% dari total harga
+        if ($request->uang_jaminan < ($reservasi->total_harga * 50 / 100)) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Uang jaminan minimal 50% dari total harga',
             ], 400);
         }
+
+        // validate req Uang jaminan maksimal 100% dari total harga
+        if ($request->uang_jaminan > $reservasi->total_harga) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Uang jaminan melebihi harga',
+            ], 400);
+        }
+
+        // TODO: kalo perlu di uncomment
+        // // batas bayar  maksimal seminggu sebelum tanggal_checkin
+        // if (
+        //     Carbon::now()->format('Y-m-d') >
+        //     Carbon::parse($reservasi->tanggal_reservasi)->subDays(7)->format('Y-m-d')
+        // ) {
+        //     // return api
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Batas pembayaran jaminan sudah lewat',
+        //     ], 400);
+        // }
 
         // update data reservasi
         $reservasi->update([
             'status' => 'belum cekin',
+            'total_jaminan' => $request->uang_jaminan,
             'tanggal_pembayaran_lunas' => Carbon::now()->format('Y-m-d'),
         ]);
 

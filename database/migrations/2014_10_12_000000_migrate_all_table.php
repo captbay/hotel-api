@@ -96,7 +96,7 @@ return new class extends Migration
             $table->date('tanggal_end_reservasi');
             $table->dateTime('check_in')->nullable();
             $table->dateTime('check_out')->nullable();
-            $table->string('status'); // belum cekin, belom bayar jaminan, sudah cekin, cancel, selesai
+            $table->string('status'); // belum cekin, belum bayar jaminan, sudah cekin, cancel, selesai
             $table->integer('dewasa');
             $table->integer('anak');
             $table->integer('total_jaminan')->nullable();
