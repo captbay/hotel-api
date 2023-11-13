@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\kamar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 // available,  unavailable
@@ -105,6 +106,22 @@ class KamarController extends Controller
      */
     public function dashboard(Request $request)
     {
+        // if login role is SM
+        if (Auth::user()->role == "SM") {
+            // if $request->start_date is between week now
+            if (
+                Carbon::now()->startOfWeek()->format('Y-m-d') <= Carbon::parse($request->start_date)->format('Y-m-d')
+                && Carbon::now()->endOfWeek()->format('Y-m-d') >= Carbon::parse($request->start_date)->format('Y-m-d')
+            ) {
+                // return api
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak bisa booking mendadak, harus 1 minggu sebelumnya',
+                ], 422);
+            }
+        }
+
+
         // validate $request->start_date and $request->end_date if null
         if ($request->start_date == null || $request->end_date == null) {
             // return api

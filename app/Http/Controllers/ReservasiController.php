@@ -436,17 +436,17 @@ class ReservasiController extends Controller
         }
 
         // TODO: kalo perlu di uncomment
-        // // batas bayar  maksimal seminggu sebelum tanggal_checkin
-        // if (
-        //     Carbon::now()->format('Y-m-d') >
-        //     Carbon::parse($reservasi->tanggal_reservasi)->subDays(7)->format('Y-m-d')
-        // ) {
-        //     // return api
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Batas pembayaran jaminan sudah lewat',
-        //     ], 400);
-        // }
+        // batas bayar  maksimal seminggu sebelum tanggal_checkin
+        if (
+            Carbon::now()->format('Y-m-d') >
+            Carbon::parse($reservasi->tanggal_reservasi)->subDays(7)->format('Y-m-d')
+        ) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Batas pembayaran jaminan sudah lewat',
+            ], 400);
+        }
 
         // if date now > tanggal_reservasi
         if (
