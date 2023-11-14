@@ -108,16 +108,15 @@ class KamarController extends Controller
     {
         // if login role is SM
         if (Auth::user()->role == "SM") {
-            // if $request->start_date is between week now
             if (
-                Carbon::now()->startOfWeek()->format('Y-m-d') <= Carbon::parse($request->start_date)->format('Y-m-d')
-                && Carbon::now()->endOfWeek()->format('Y-m-d') >= Carbon::parse($request->start_date)->format('Y-m-d')
+                Carbon::now()->format('Y-m-d') >
+                Carbon::parse($request->start_date)->subDays(7)->format('Y-m-d')
             ) {
                 // return api
                 return response()->json([
                     'success' => false,
-                    'message' => 'Tidak bisa booking mendadak, harus 1 minggu sebelumnya',
-                ], 422);
+                    'message' => 'Tidak bisa booking mendadak, harus 1 minggu setelah hari ini',
+                ], 400);
             }
         }
 
