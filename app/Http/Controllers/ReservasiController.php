@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\fasilitas_tambahan;
 use App\Models\reservasi;
+use App\Models\transaksi_fasilitas_tambahan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -488,5 +490,82 @@ class ReservasiController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function indexFo(){
+        // find data reservasi where can cek in
+        //get
+        $reservasis = reservasi::with(
+            'customer',
+            'pegawai',
+            'transaksi_kamar.kamar.jenis_kamar',
+            'transaksi_fasilitas_tambahan.fasilitas_tambahan'
+        )
+            ->whereNotIn('status', ['cancel','belum bayar jaminan'])
+            ->get();
+
+        // return api
+        return response()->json([
+            'success' => true,
+            'message' => 'Daftar data reservasi cek in',
+            'data' => $reservasis
+        ], 200);
+    }
+
+    public function cekIn(Request $request, $id){
+       // find data reservasi id
+        $reservasi = reservasi::find($id);
+
+        // if data reservasi null
+        if (!$reservasi) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Data reservasi tidak ditemukan',
+            ], 404);
+        }
+
+        $reservasi->update([
+            'status' => 'cek in',
+            'total_deposit' => $request->total_deposit
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Sukses Cek IN',
+            'data' => $reservasi
+        ], 200);
+    }
+
+    public function tambahFasilitas(Request $request, $id){
+        // find data reservasi id
+        $reservasi = reservasi::find($id);
+
+        // if data reservasi null
+        if (!$reservasi) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Data reservasi tidak ditemukan',
+            ], 404);
+        }
+        // Ekstrak semua ID fasilitas tambahan
+        $data = collect($request);
+        $fasilitasTambahanIds = $data->pluck('fasilitas_tambahan_id');
+
+        $fasilitas = fasilitas_tambahan::whereIn('id', $fasilitasTambahanIds)->get();
+        $dataArray = json_decode($data, true);
+        foreach ($dataArray as $key => $item) {
+            $dataArray[$key]['reservasi_id'] = $id;
+            $dataArray[$key]['total_harga'] = $fasilitas[$key]['harga'] * $item['jumlah'];
+            $dataArray[$key]['created_at'] = Carbon::now();
+            $dataArray[$key]['updated_at'] = Carbon::now();
+        }
+        transaksi_fasilitas_tambahan::where('reservasi_id', $id)->delete();
+        transaksi_fasilitas_tambahan::insert($dataArray);
+        return response()->json([
+            'success' => true,
+            'message' => 'Sukses Tambah Fasilitas',
+            'data' => $reservasi
+        ], 200);
     }
 }

@@ -146,6 +146,12 @@ Route::group(['prefix' => 'reservasi', 'middleware' => ['auth:sanctum']], functi
     Route::get('grup/list', [ReservasiController::class, 'listReservasiGrup']);
     // input uang jaminan grup
     Route::put('grup/jaminan/{id}', [ReservasiController::class, 'inputJaminanGrup']);
+    // get all reservasi khusus FO
+    Route::get('all/fo', [ReservasiController::class, 'indexFo']);
+    // fungsi cek in untuk fo
+    Route::put('cek-in/{id}', [ReservasiController::class, 'cekIn']);
+    // tambah fasilitas
+    Route::post('tambah-fasilitas/{id}', [ReservasiController::class, 'tambahFasilitas']);
     // // update reservasi
     // Route::put('update/{id}', [ReservasiController::class, 'update']);
     // // delete reservasi
