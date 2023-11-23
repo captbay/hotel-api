@@ -24,11 +24,30 @@ class InvoiceController extends Controller
      */
     public function create(Request $request, $id)
     {
-        $reservasi = reservasi::find($id);
+        $reservasi = reservasi::with('pegawai.user')
+                                ->with('transaksi_fasilitas_tambahan.fasilitas_tambahan')
+                                ->with('transaksi_kamar.kamar.jenis_kamar.tarif_musim')
+                                ->find($id);
+
+        $totalHargaFasilitasTambahan = 0;
+
+        $reservasi->transaksi_fasilitas_tambahan->each(function ($transaksi) use (&$totalHargaFasilitasTambahan) {
+            $totalHargaFasilitasTambahan += $transaksi->total_harga;
+        });
+        $reservasi->total_harga_fasilitas_tambahan = $totalHargaFasilitasTambahan;
+
         if($reservasi->status != 'selesai'){
             return response()->json([
                 'success' => false,
                 'message' => 'Invoices Tidak Bisa Dibuat',
+            ], 403);
+        }
+
+        $invoice = invoice::where('reservasi_id', $id)->first();
+        if($invoice){
+            return response()->json([
+                'success' => false,
+                'message' => "Invoices Sudah Tersedia Untuk Reservasi ini dengan No Invoice : ".$invoice->no_invoice."" ,
             ], 403);
         }
         if (DB::table('invoices')->count() == 0) {
@@ -38,8 +57,23 @@ class InvoiceController extends Controller
         }
         $date = Carbon::now()->format('dmy');
         $count = $id_terakhir + 1;
-        $id_generate = sprintf("P".$date."-%03d", $count);
-        return $id_generate;
+        $id_generate  = sprintf("P".$date."-%03d", $count);
+        $total_harga = $reservasi->total_harga + $reservasi->total_harga_fasilitas_tambahan;
+        $pajak = $total_harga * 0.1;
+        $total_pembayaran = $total_harga + $pajak;
+        invoice::create([
+            'reservasi_id' => $id,
+            'no_invoice' => $id_generate,
+            'pegawai_id' => $request->pegawai_id,
+            'tanggal_lunas_nota' => Carbon::now()->format('Y-m-d'),
+            'total_harga' => $total_harga,
+            'total_pajak' => $pajak,
+            'total_pembayaran' => $total_pembayaran
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Invoice Berhasi Dibuat',
+        ], 200);
     }
 
     /**
