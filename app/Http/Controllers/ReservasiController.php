@@ -551,11 +551,12 @@ class ReservasiController extends Controller
         }
 
         $reservasi->update([
+            'check_out' => Carbon::now(),
             'status' => 'selesai',
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Sukses Cek IN',
+            'message' => 'Sukses Cek Out/Selesai',
             'data' => $reservasi
         ], 200);
     }
