@@ -527,7 +527,31 @@ class ReservasiController extends Controller
 
         $reservasi->update([
             'status' => 'cek in',
-            'total_deposit' => $request->total_deposit
+            'check_in' => Carbon::now(),
+            'total_deposit' => 300000
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Sukses Cek IN',
+            'data' => $reservasi
+        ], 200);
+    }
+
+    public function cekOut(Request $request, $id){
+       // find data reservasi id
+        $reservasi = reservasi::find($id);
+
+        // if data reservasi null
+        if (!$reservasi) {
+            // return api
+            return response()->json([
+                'success' => false,
+                'message' => 'Data reservasi tidak ditemukan',
+            ], 404);
+        }
+
+        $reservasi->update([
+            'status' => 'selesai',
         ]);
         return response()->json([
             'success' => true,
