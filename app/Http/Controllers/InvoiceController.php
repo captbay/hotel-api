@@ -9,6 +9,7 @@ use App\Models\reservasi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 class InvoiceController extends Controller
 {
     /**
@@ -72,8 +73,73 @@ class InvoiceController extends Controller
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Invoice Berhasi Dibuat',
+            'message' => 'Invoice Berhasil Dibuat',
         ], 200);
+    }
+
+    public function invoice($id){
+        $reservasi = reservasi::with('pegawai.user')
+                            ->with('customer.user')
+                            ->with('transaksi_fasilitas_tambahan.fasilitas_tambahan')
+                            ->with('transaksi_kamar.kamar.jenis_kamar.tarif_musim')
+                            ->find($id);
+
+        $kamar = [];
+        $total_harga_kamar = 0;
+        $reservasi->transaksi_kamar->each(function ($item) use (&$kamar, &$total_harga_kamar) {
+            $kamar[] = [
+                'jenis_kamar' => $item->kamar->jenis_kamar->name,
+                'bed' => $item->kamar->jenis_kamar->bed,
+                'jumlah' => 1,
+                'harga' => $item->kamar->jenis_kamar->harga_default,
+                'sub_total' => $item->total_harga
+            ];
+            $total_harga_kamar += $item->total_harga;
+        });
+
+        $layanan = [];
+        $total_harga_layanan = 0;
+        $reservasi->transaksi_fasilitas_tambahan->each(function ($item) use (&$layanan, &$total_harga_layanan) {
+            $layanan[] = [
+                'layanan' => $item->fasilitas_tambahan->name,
+                'tanggal' => Carbon::parse($item->created_at)->format('d/M/Y'),
+                'jumlah' => $item->jumlah,
+                'harga' => $item->fasilitas_tambahan->harga,
+                'sub_total' => $item->total_harga
+            ];
+            $total_harga_layanan += $item->total_harga;
+        });
+
+        $invoice = invoice::with('pegawai.user')->where('reservasi_id', $id)->first();
+
+        $data = [
+            'data' => [
+                'tanggal' => Carbon::parse($invoice->created_at)->format('d/M/Y'),
+                'nomor_invoice' => $invoice->no_invoice,
+                'front_office' => $invoice->pegawai ? $invoice->pegawai->name : null ,
+                'id_booking' => $reservasi->kode_booking,
+                'nama_pelanggan' => $reservasi->customer->name,
+                'alamat' => $reservasi->customer->address,
+                'check_in' => Carbon::parse($reservasi->check_in)->format('d/M/Y'),
+                'check_out' => Carbon::parse($reservasi->check_out)->format('d/M/Y'),
+                'dewasa' => $reservasi->dewasa,
+                'anak_anak' => $reservasi->anak,
+                'kamar' => $kamar,
+                'total_harga_kamar' =>$total_harga_kamar,
+                'layanan' => $layanan,
+                'total_harga_fasilitas' => $total_harga_layanan,
+                'pajak' => $invoice->total_pajak,
+                'total' =>  $total_harga_kamar + $total_harga_layanan + $invoice->total_pajak,
+                'jaminan' => $reservasi->total_jaminan,
+                'deposit' => $reservasi->total_deposit,
+                'tunai' => $total_harga_kamar + $total_harga_layanan + $invoice->total_pajak - $reservasi->total_jaminan - $reservasi->total_deposit,
+            ]
+        ];
+        $pdf = Pdf::loadview('invoices', $data);
+
+        // return $pdf->download('invoice.pdf');
+        // return $pdf->output();
+        return $pdf->stream();
     }
 
     /**
