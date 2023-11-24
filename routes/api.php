@@ -154,6 +154,8 @@ Route::group(['prefix' => 'reservasi', 'middleware' => ['auth:sanctum']], functi
     Route::put('cek-out/{id}', [ReservasiController::class, 'cekOut']);
     // tambah fasilitas
     Route::post('tambah-fasilitas/{id}', [ReservasiController::class, 'tambahFasilitas']);
+    //fasilitas & total harga
+    Route::get('total-fasilitas/{id}', [ReservasiController::class, 'totalFasilitas']);
     // // update reservasi
     // Route::put('update/{id}', [ReservasiController::class, 'update']);
     // // delete reservasi
@@ -168,6 +170,8 @@ Route::group(['prefix' => 'invoice', 'middleware' => ['auth:sanctum']], function
     // Route::get('get/{id}', [InvoiceController::class, 'show']);
     // create invoice
     Route::post('create/{id}', [InvoiceController::class, 'create']);
+    //cetak invoice
+    Route::get('cetak/{id}', [InvoiceController::class, 'invoice']);
     // update invoice
     // Route::put('update/{id}', [InvoiceController::class, 'update']);
     // delete invoice

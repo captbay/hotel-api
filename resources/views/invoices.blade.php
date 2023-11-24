@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Tanda Terima Reservasi untuk {{ $reservasi->customer->name }}</title>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <!-- Sertakan stylesheet di sini jika diperlukan -->
+</head>
     <style>
         /* Gaya CSS Anda dapat disesuaikan di sini */
         body {
@@ -16,10 +18,6 @@
 
         .header {
             text-align: center;
-        }
-
-        .content {
-            margin-top: 10px;
         }
 
         .item {
@@ -44,8 +42,6 @@
             max-width: 400px;
         }
     </style>
-</head>
-
 <body>
     <div class="container">
         <div class="header">
@@ -56,131 +52,83 @@
             <p>Jl. P. Mangkubumi No.18, Yogyakarta 55233</p>
             <p>Telp. (0274) 487711</p>
         </div>
-        <div class="content">
-            <div class="item">
-                <span>TANDA TERIMA PEMESANAN</span>
-            </div>
+        <hr>
+        <h3 style="text-align: center">INVOICE</h3>
+        <hr>
+        <div style="text-align: right">
+            <p>Tanggal: {{ $data['tanggal'] }}</p>
+            <p>No. Invoice: {{ $data['nomor_invoice'] }}</p>
+            <p>Front Office: {{ $data['front_office'] }}</p>
         </div>
-        <div class="footer">
-            <div>
-                <table>
-                    <tr>
-                        <td>ID Booking </td>
-                        <td>: {{ $reservasi->kode_booking }} </td>
-                    </tr>
-                    <tr>
-                        <td>Tanggal </td>
-                        <td>: {{ $tanggal_sekarang }} </td>
-                    </tr>
-                    @if ($reservasi->pegawai_id != null)
-                        <tr>
-                            <td>PIC</td>
-                            <td>: {{ $reservasi->pegawai->name }}</td>
-                        </tr>
-                    @endif
-                </table>
-            </div>
-            <table style="margin-top: 8px;">
-                <tr>
-                    <td>Nama</td>
-                    <td>: {{ $reservasi->customer->name }}</td>
-                </tr>
-                <tr>
-                    <td>Alamat</td>
-                    <td>: {{ $reservasi->customer->address }}</td>
-                </tr>
-            </table>
-        </div>
-        <div class="content">
-            <div class="item">
-                <span>DETAIL PEMESANAN</span>
-            </div>
-        </div>
-        <div class="footer">
-            <div>
-                <table>
-                    <tr>
-                        <td>Check In</td>
-                        <td>: {{ $reservasi->tanggal_reservasi }} </td>
-                    </tr>
-                    <tr>
-                        <td>Check Out</td>
-                        <td>: {{ $reservasi->tanggal_end_reservasi }} </td>
-                    </tr>
-                    <tr>
-                        <td>Dewasa</td>
-                        <td>: {{ $reservasi->dewasa }}</td>
-                    </tr>
-                    <tr>
-                        <td>Anak-anak</td>
-                        <td>: {{ $reservasi->anak }}</td>
-                    </tr>
-                    <tr>
-                        <td>Tanggal Pembayaran</td>
-                        <td>: {{ $reservasi->tanggal_pembayaran_lunas }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="content">
-            <div class="item">
-                <span><br /></span>
-            </div>
-        </div>
-        <div style="margin-top: 8px">
-            <table style="border: 1px solid black; border-collapse: collapse;">
-                <tr>
-                    <th style="border: 1px solid black; border-collapse: collapse; padding: 5px;">No Kamar</th>
-                    <th style="border: 1px solid black; border-collapse: collapse; padding: 5px;">Jenis Kamar</th>
-                    <th style="border: 1px solid black; border-collapse: collapse; padding: 5px;">Bed</th>
-                    <th style="border: 1px solid black; border-collapse: collapse; padding: 5px;">Jumlah</th>
-                    <th style="border: 1px solid black; border-collapse: collapse; padding: 5px;">Harga</th>
-                    <th style="border: 1px solid black; border-collapse: collapse; padding: 5px;">Total</th>
-                </tr>
-                @foreach ($reservasi->transaksi_kamar as $kamar)
-                    <tr>
-                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
-                            {{ $kamar->kamar['no_kamar'] }} </td>
-                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
-                            {{ $kamar->kamar->jenis_kamar['name'] }} </td>
-                        <td style="border: 1px solid black;  border-collapse: collapse; padding: 5px;">
-                            {{ $kamar->kamar->jenis_kamar['bed'] }} </td>
-                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;"> 1 </td>
-                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
-                            {{ number_format($kamar->total_harga, 0, ',', '.') }} </td>
-                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
-                            {{ number_format($kamar->total_harga, 0, ',', '.') }} </td>
-                    </tr>
-                @endforeach
+        <hr>
+        <h3 style="text-align: center">DETAIL</h3>
+        <hr>
+        <!-- Informasi Pelanggan -->
+        <p>ID Booking: {{ $data['id_booking'] }}</p>
+        <p>Nama: {{ $data['nama_pelanggan'] }}</p>
+        <p>Alamat: {{ $data['alamat'] }}</p>
 
+        <!-- Detail Pemesanan -->
+        <p>Check In: {{ $data['check_in'] }}</p>
+        <p>Check Out: {{ $data['check_out'] }}</p>
+        <p>Dewasa: {{ $data['dewasa'] }}</p>
+        <p>Anak-anak: {{ $data['anak_anak'] }}</p>
+
+        <!-- Kamar -->
+        <hr>
+        <h3 style="text-align: center">KAMAR</h3>
+        <hr>
+        <table style="width: 100%; padding-top : 5px;" border="2px">
+            <tr class="item">
+                <td>Jenis Kamar</td>
+                <td>Bed</td>
+                <td>Jumlah</td>
+                <td>Harga</td>
+                <td>Sub Total</td>
+            </tr>
+            @foreach ($data['kamar'] as $kamar)
                 <tr>
-                    <td colspan="5" style="text-align: right; border: 1px solid black; padding: 5px;">Total</td>
-                    <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
-                        {{ number_format($reservasi->total_harga, 0, ',', '.') }}</td>
+                    <td>{{ $kamar['jenis_kamar'] }}</td>
+                    <td>{{ $kamar['bed'] }}</td>
+                    <td style="text-align: right;">{{ $kamar['jumlah'] }}</td>
+                    <td style="text-align: right;">Rp{{ number_format($kamar['harga']) }}</td>
+                    <td style="text-align: right;">Rp{{ number_format($kamar['sub_total']) }}</td>
                 </tr>
-                @if ($reservasi->pegawai_id != null)
-                    <tr>
-                        <td colspan="5" style="text-align: right; border: 1px solid black; padding: 5px;">Uang
-                            Jaminan</td>
-                        <td style="border: 1px solid black; border-collapse: collapse; padding: 5px;">
-                            {{ number_format($reservasi->total_jaminan, 0, ',', '.') }}</td>
-                    </tr>
-                @endif
-            </table>
+            @endforeach
+        </table>
+        <h4 style="text-align: right">TOTAL : Rp{{ number_format($data['total_harga_kamar'])}}</h4>
+        <!-- Layanan -->
+        <hr>
+        <h3 style="text-align: center">LAYANAN</h3>
+        <hr>
+        <table style="width: 100%;" border="2px">
+            <tr class="item">
+                <td>Layanan</td>
+                <td>Tanggal</td>
+                <td>Jumlah</td>
+                <td>Harga</td>
+                <td>Sub Total</td>
+            </tr>
+            @foreach ($data['layanan'] as $layanan)
+                <tr>
+                    <td>{{ $layanan['layanan'] }}</td>
+                    <td style="text-align: right;">{{ $layanan['tanggal'] }}</td>
+                    <td style="text-align: right;">{{ $layanan['jumlah'] }}</td>
+                    <td style="text-align: right;">Rp{{ number_format($layanan['harga']) }}</td>
+                    <td style="text-align: right;">Rp{{ number_format($layanan['sub_total']) }}</td>
+                </tr>
+            @endforeach
+        </table>
+        <h4 style="text-align: right">TOTAL : Rp{{ number_format($data['total_harga_fasilitas'])}}</h4>
+        <div style="text-align: right;">
+        <p>Pajak: Rp{{ number_format($data['pajak']) }}</p>
+        <h4>Total: Rp{{ number_format($data['total']) }}</h4>
+        <br>
+        <p>Jaminan: Rp{{ number_format($data['jaminan']) }}</p>
+        <p>Deposit: Rp{{ number_format($data['deposit']) }}</p>
+        <h4>Cash: Rp{{ number_format($data['tunai']) }}</h4>
         </div>
-        <div class="footer" style="margin-top: 32px">
-            <div>
-                <table>
-                    <tr>
-                        <td>Permintaan Khusus :</td>
-                    </tr>
-                    <tr>
-                        <td>{{ $reservasi->note }} </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+        <p style="text-align: center;">Thank You For Your Visit!</p>
     </div>
 </body>
-
 </html>

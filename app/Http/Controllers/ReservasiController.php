@@ -587,10 +587,34 @@ class ReservasiController extends Controller
         }
         transaksi_fasilitas_tambahan::where('reservasi_id', $id)->delete();
         transaksi_fasilitas_tambahan::insert($dataArray);
+        $reservasi->update([
+            'status' => 'cek in'
+        ]);
         return response()->json([
             'success' => true,
             'message' => 'Sukses Tambah Fasilitas',
             'data' => $reservasi
         ], 200);
+    }
+
+    public function totalFasilitas($id){
+        $fasilitas_tambahan = transaksi_fasilitas_tambahan::with('fasilitas_tambahan')->where('reservasi_id', $id)->get();
+        $total = 0;
+        $fasilitas_tambahan->each(function ($item) use(&$total) {
+            $total += $item->total_harga;
+            $item->fasilitas_name = $item->fasilitas_tambahan->name;
+
+            unset($item->fasilitas_tambahan);
+        });
+        $data = [
+            'total_harga_fasilitas' => $total,
+            'fasilitas' => $fasilitas_tambahan
+        ];
+        return response()->json([
+            'success' => true,
+            'message' => 'Sukses Total Harga & Fasilitas',
+            'data' => $data
+        ], 200);
+
     }
 }
