@@ -95,8 +95,11 @@
                     <td style="text-align: right;">Rp{{ number_format($kamar['sub_total']) }}</td>
                 </tr>
             @endforeach
+            <tr class="total">
+                <td colspan="4" style="text-align: right;">Total:</td>
+                <td style="text-align: right;">Rp{{ number_format($data['total_harga_kamar']) }}</td>
+            </tr>
         </table>
-        <h4 style="text-align: right">TOTAL : Rp{{ number_format($data['total_harga_kamar'])}}</h4>
         <!-- Layanan -->
         <hr>
         <h3 style="text-align: center">LAYANAN</h3>
@@ -118,8 +121,11 @@
                     <td style="text-align: right;">Rp{{ number_format($layanan['sub_total']) }}</td>
                 </tr>
             @endforeach
+            <tr class="total">
+                <td colspan="4" style="text-align: right;">Total:</td>
+                <td style="text-align: right;">Rp{{ number_format($data['total_harga_fasilitas']) }}</td>
+            </tr>
         </table>
-        <h4 style="text-align: right">TOTAL : Rp{{ number_format($data['total_harga_fasilitas'])}}</h4>
         <div style="text-align: right;">
         <p>Pajak: Rp{{ number_format($data['pajak']) }}</p>
         <h4>Total: Rp{{ number_format($data['total']) }}</h4>
