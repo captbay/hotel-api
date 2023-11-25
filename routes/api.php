@@ -6,6 +6,7 @@ use App\Http\Controllers\FasilitasTambahanController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\JenisKamarController;
 use App\Http\Controllers\KamarController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MusimController;
 use App\Http\Controllers\ReservasiController;
 use App\Http\Controllers\TarifMusimController;
@@ -176,4 +177,9 @@ Route::group(['prefix' => 'invoice', 'middleware' => ['auth:sanctum']], function
     // Route::put('update/{id}', [InvoiceController::class, 'update']);
     // delete invoice
     // Route::delete('delete/{id}', [InvoiceController::class, 'destroy']);
+});
+
+//laporan
+Route::group(['prefix' => 'laporan', 'middleware' => ['auth:sanctum']], function () {
+    Route::get('laporan-1', [LaporanController::class, 'laporan1']);
 });
