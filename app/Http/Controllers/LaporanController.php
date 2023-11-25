@@ -68,11 +68,16 @@ class LaporanController extends Controller
         usort($result, function ($a, $b) use ($bulanIndonesia) {
             return array_search($a['bulan'], $bulanIndonesia) - array_search($b['bulan'], $bulanIndonesia);
         });
+        $totalCustomer = 0;
 
+        foreach ($result as $item) {
+            $totalCustomer += $item['total_customer'];
+        }
         $data = [
             'tahun' => $year,
             'data' => $result,
-            'cetak' => Carbon::now()
+            'cetak' => Carbon::now()->format('d F Y'),
+            'total' => $totalCustomer
         ];
         $pdf = Pdf::loadview('laporan1', $data);
 

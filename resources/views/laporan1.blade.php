@@ -56,7 +56,7 @@
         <h3 style="text-align: center">LAPORAN CUSTOMER BARU</h3>
         <hr>
         <div>
-            <h5>Tahun: {{ $tahun }}</h5>
+            <h4>Tahun: {{ $tahun }}</h4>
         </div>
 
         <table style="width: 100%; padding-top : 5px;" border="2px">
@@ -73,13 +73,13 @@
                     <td style="text-align: right;">{{ $item['total_customer'] }}</td>
                 </tr>
             @endforeach
-            {{-- <tr class="total">
-                <td colspan="4" style="text-align: right;">Total:</td>
-                <td style="text-align: right;">Rp{{ number_format($data['total_harga_kamar']) }}</td>
-            </tr> --}}
+            <tr class="total">
+                <td colspan="2" style="text-align: right;">Total:</td>
+                <td style="text-align: right;">{{$total}}</td>
+            </tr>
         </table>
         <div style="text-align: right;">
-        <p>Dicetak: {{ $cetak }}</p>
+        <p>Dicetak tanggal : {{ $cetak }}</p>
         </div>
     </div>
 </body>
