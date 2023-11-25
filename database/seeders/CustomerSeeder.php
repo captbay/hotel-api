@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +47,8 @@ class CustomerSeeder extends Seeder
                 'no_phone' => $d['no_phone'],
                 'nama_insitusi' => $d['nama_insitusi'],
                 'address' => $d['address'],
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
     }
