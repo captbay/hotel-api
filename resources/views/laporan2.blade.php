@@ -53,7 +53,7 @@
             <p>Telp. (0274) 487711</p>
         </div>
         <hr>
-        <h3 style="text-align: center">LAPORAN CUSTOMER BARU</h3>
+        <h3 style="text-align: center">LAPORAN PENDAPATAN BULANAN</h3>
         <hr>
         <div>
             <h4>Tahun: {{ $tahun }}</h4>

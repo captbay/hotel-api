@@ -294,6 +294,138 @@ class LaporanController extends Controller
         });
         $kamar = $reservasi->pluck('transaksi_kamar')->toArray();
         $dataBaru = array_merge(...$kamar);
-        return $dataBaru;
+        $jenis_kamar = [
+            'SUPERIOR',
+            'DOUBLE DELUXE',
+            'EXECUTIVE DELUXE',
+            'JUNIOR SUITE'
+        ];
+        $hasil = [];
+
+        // Membuat template untuk setiap jenis kamar dengan nilai awal 0
+        foreach ($jenis_kamar as $jenis) {
+            $hasil[$jenis] = ['jenis' => $jenis, 'personal' => 0, 'grup' => 0, 'total' => 0];
+        }
+
+        // Iterasi melalui data reservasi dan menghitung jumlahnya
+        foreach ($dataBaru as $reservasi) {
+            if (array_key_exists($reservasi['jenis'], $hasil)) {
+                if ($reservasi['type'] === 'personal') {
+                    $hasil[$reservasi['jenis']]['personal'] += 1;
+                } elseif ($reservasi['type'] === 'grup') {
+                    $hasil[$reservasi['jenis']]['grup'] += 1;
+                }
+                // Menambahkan jumlah ke total
+                $hasil[$reservasi['jenis']]['total'] = $hasil[$reservasi['jenis']]['personal'] + $hasil[$reservasi['jenis']]['grup'];
+            }
+        }
+        // Mengonversi hasil menjadi array indeks
+        $hasilAkhir = array_values($hasil);
+        $totalPendapatan = 0;
+
+        foreach ($hasilAkhir as $item) {
+            // Menambahkan total dari setiap bulan ke total pendapatan
+            $totalPendapatan += $item["total"];
+        }
+        $namaBulan = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+        $data = [
+            'tahun' => $year,
+            'bulan' => $namaBulan[$month],
+            'data' => $hasilAkhir,
+            'cetak' => Carbon::now()->format('d F Y'),
+            'total' => $totalPendapatan
+        ];
+        $pdf = Pdf::loadview('laporan3', $data);
+
+        // return $pdf->download('invoice.pdf');
+        // return $pdf->output();
+        return $pdf->stream();
+    }
+
+    public function laporan3Data(Request $request)
+    {
+        $year = $request->tahun;
+        $month = $request->bulan;
+        $reservasi = reservasi::with(
+                    'customer',
+                    'pegawai',
+                    'transaksi_kamar.kamar.jenis_kamar',
+                )
+                ->select('*', DB::raw("
+                CASE
+                    WHEN pegawai_id IS NOT NULL THEN 'grup'
+                    ELSE 'personal'
+                END as type
+                "))
+                ->whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->get();
+        // Menyimpan nilai 'type' ke dalam setiap elemen 'transaksi_kamar' menggunakan each
+        $reservasi->each(function ($item) {
+            $type = $item->type;
+
+            // Menambahkan 'type' ke dalam setiap elemen 'transaksi_kamar'
+            if ($item->transaksi_kamar) {
+                $item->transaksi_kamar->each(function ($transaksi) use ($type) {
+                    $transaksi->type = $type;
+                    $transaksi->jenis = $transaksi->kamar->jenis_kamar->name;
+                    unset($transaksi->kamar);
+                });
+            }
+        });
+        $kamar = $reservasi->pluck('transaksi_kamar')->toArray();
+        $dataBaru = array_merge(...$kamar);
+        $jenis_kamar = [
+            'SUPERIOR',
+            'DOUBLE DELUXE',
+            'EXECUTIVE DELUXE',
+            'JUNIOR SUITE'
+        ];
+        $hasil = [];
+
+        // Membuat template untuk setiap jenis kamar dengan nilai awal 0
+        foreach ($jenis_kamar as $jenis) {
+            $hasil[$jenis] = ['jenis' => $jenis, 'personal' => 0, 'grup' => 0, 'total' => 0];
+        }
+
+        // Iterasi melalui data reservasi dan menghitung jumlahnya
+        foreach ($dataBaru as $reservasi) {
+            if (array_key_exists($reservasi['jenis'], $hasil)) {
+                if ($reservasi['type'] === 'personal') {
+                    $hasil[$reservasi['jenis']]['personal'] += 1;
+                } elseif ($reservasi['type'] === 'grup') {
+                    $hasil[$reservasi['jenis']]['grup'] += 1;
+                }
+                // Menambahkan jumlah ke total
+                $hasil[$reservasi['jenis']]['total'] = $hasil[$reservasi['jenis']]['personal'] + $hasil[$reservasi['jenis']]['grup'];
+            }
+        }
+        // Mengonversi hasil menjadi array indeks
+        $hasilAkhir = array_values($hasil);
+        $totalPendapatan = 0;
+
+        foreach ($hasilAkhir as $item) {
+            // Menambahkan total dari setiap bulan ke total pendapatan
+            $totalPendapatan += $item["total"];
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Laporan 3',
+            'data' => $hasilAkhir
+        ], 200);
     }
 }
