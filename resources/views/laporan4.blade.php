@@ -53,7 +53,7 @@
             <p>Telp. (0274) 487711</p>
         </div>
         <hr>
-        <h3 style="text-align: center">LAPORAN CUSTOMER BARU</h3>
+        <h3 style="text-align: center">LAPORAN 5 CUSTOMER RESERVASI TERBANYAK</h3>
         <hr>
         <div>
             <h4>Tahun: {{ $tahun }}</h4>
@@ -62,21 +62,19 @@
         <table style="width: 100%; padding-top : 5px;" border="2px">
             <tr class="item">
                 <td>No</td>
-                <td>Bulan</td>
-                <td>Jumlah</td>
+                <td>Nama Customer</td>
+                <td>Jumlah Reservasi</td>
+                <td>Total Pembayaran</td>
             </tr>
             <?php $i = 1; ?>
             @foreach ($data as $item)
                 <tr>
                     <td style="text-align: center;">{{ $i++ }}</td>
-                    <td>{{ $item['bulan'] }}</td>
-                    <td style="text-align: right;">{{ $item['total_customer'] }}</td>
+                    <td>{{ $item['customer_name'] }}</td>
+                    <td style="text-align: right;">{{ $item['jumlah_reservasi'] }}</td>
+                    <td style="text-align: right;">Rp{{ number_format($item['total_harga_kamar'] + $item['total_harga_fasilitas'])  }}</td>
                 </tr>
             @endforeach
-            <tr class="total">
-                <td colspan="2" style="text-align: right;">Total:</td>
-                <td style="text-align: right;">{{$total}}</td>
-            </tr>
         </table>
         <div style="text-align: right;">
         <p>Dicetak tanggal : {{ $cetak }}</p>
