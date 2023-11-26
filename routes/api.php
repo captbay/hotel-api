@@ -191,6 +191,6 @@ Route::group(['prefix' => 'laporan', 'middleware' => ['auth:sanctum']], function
     Route::get('laporan-3', [LaporanController::class, 'laporan3']);
     //data laporan 3
     Route::get('laporan-3/data', [LaporanController::class, 'laporan3Data']);
+    //cetak laporan 4
     Route::get('laporan-4', [LaporanController::class, 'laporan4']);
-    Route::get('laporan-5', [LaporanController::class, 'laporan5']);
 });

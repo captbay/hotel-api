@@ -428,4 +428,73 @@ class LaporanController extends Controller
             'data' => $hasilAkhir
         ], 200);
     }
+
+    public function laporan4(Request $request)
+    {
+        $year = $request->tahun;
+        // Mencari 5 customer dengan jumlah reservasi terbanyak
+        $topUsers = Reservasi::query()
+            ->select('customer_id', DB::raw('SUM(total_harga) as total_harga_kamar'), DB::raw('count(*) as jumlah_reservasi'))
+            ->whereYear('created_at', $year)
+            ->with('customer')
+            ->groupBy('customer_id')
+            ->orderByDesc('jumlah_reservasi')
+            ->take(5)
+            ->get();
+        $topUsers->each(function ($item) {
+            $item->customer_name = $item->customer->name;
+            unset($item->customer);
+        });
+        $customerIds = $topUsers->pluck('customer_id');
+
+        //menghitung transaksi fasilitas tambahan
+        $transaksiFasilitas = reservasi::whereIn('customer_id', $customerIds)->with('transaksi_fasilitas_tambahan')->get();
+        $transaksiFasilitas->each(function ($item) {
+            $item->total_harga_fasilitas = 0;
+            $item->transaksi_fasilitas_tambahan->each(function ($transaksi_tambahan) use(&$item) {
+                $item->total_harga_fasilitas += $transaksi_tambahan->total_harga;
+            });
+        });
+        $totalHargaFasilitasPerCustomer = [];
+
+        // Mengiterasi melalui setiap reservasi
+        foreach ($transaksiFasilitas as $reservasi) {
+            $customerID = $reservasi['customer_id'];
+
+            // Jika customer ini belum ada dalam array, inisialisasi dengan 0
+            if (!isset($totalHargaFasilitasPerCustomer[$customerID])) {
+                $totalHargaFasilitasPerCustomer[$customerID] = [
+                    'customer_id' => $customerID,
+                    'total_harga_fasilitas' => 0
+                ];
+            }
+
+            // Menambahkan total harga fasilitas dari reservasi ini ke total customer
+            $totalHargaFasilitasPerCustomer[$customerID]['total_harga_fasilitas'] += $reservasi['total_harga_fasilitas'];
+        }
+
+        // Mengonversi hasil menjadi array indeks
+        $hasilAkhir = array_values($totalHargaFasilitasPerCustomer);
+
+        $gabungan = [];
+
+        foreach ($topUsers as $item1) {
+            $item1Array = $item1->toArray();
+            foreach ($hasilAkhir as $item2) {
+                if ($item1Array['customer_id'] == $item2['customer_id']) {
+                    $gabungan[] = array_merge($item1Array, $item2);
+                }
+            }
+        }
+        $data = [
+            'tahun' => $year,
+            'data' => $gabungan,
+            'cetak' => Carbon::now()->format('d F Y'),
+        ];
+        $pdf = Pdf::loadview('laporan4', $data);
+
+        // return $pdf->download('invoice.pdf');
+        // return $pdf->output();
+        return $pdf->stream();
+    }
 }
