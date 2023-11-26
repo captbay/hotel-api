@@ -68,7 +68,7 @@
             <?php $i = 1; ?>
             @foreach ($data as $item)
                 <tr>
-                    <td>{{ $i++ }}</td>
+                    <td style="text-align: center;">{{ $i++ }}</td>
                     <td>{{ $item['bulan'] }}</td>
                     <td style="text-align: right;">{{ $item['total_customer'] }}</td>
                 </tr>

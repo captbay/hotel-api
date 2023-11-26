@@ -69,7 +69,7 @@
             <?php $i = 1; ?>
             @foreach ($data as $item)
                 <tr>
-                    <td>{{ $i++ }}</td>
+                    <td style="text-align: center;">{{ $i++ }}</td>
                     <td>{{ $item['customer_name'] }}</td>
                     <td style="text-align: right;">{{ $item['jumlah_reservasi'] }}</td>
                     <td style="text-align: right;">Rp{{ number_format($item['total_harga_kamar'] + $item['total_harga_fasilitas'])  }}</td>
