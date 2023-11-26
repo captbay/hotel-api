@@ -254,31 +254,46 @@ class LaporanController extends Controller
                     "total" => $grup + $personal
                 ];
             }
-        return $hasilManipulasi;
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Laporan 2',
+            'data' => $hasilManipulasi
+        ], 200);
     }
 
-    public function laporan3()
+    public function laporan3(Request $request)
     {
+        $year = $request->tahun;
+        $month = $request->bulan;
         $reservasi = reservasi::with(
                     'customer',
                     'pegawai',
                     'transaksi_kamar.kamar.jenis_kamar',
-                    'transaksi_fasilitas_tambahan.fasilitas_tambahan',
-                    'invoices'
                 )
                 ->select('*', DB::raw("
                 CASE
                     WHEN pegawai_id IS NOT NULL THEN 'grup'
                     ELSE 'personal'
                 END as type
-                "))->get();
+                "))
+                ->whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->get();
+        // Menyimpan nilai 'type' ke dalam setiap elemen 'transaksi_kamar' menggunakan each
         $reservasi->each(function ($item) {
-            // Memeriksa apakah ada invoice dan menambahkan 'type' ke dalamnya
+            $type = $item->type;
+
+            // Menambahkan 'type' ke dalam setiap elemen 'transaksi_kamar'
             if ($item->transaksi_kamar) {
-                $item->transaksi_kamar->type = $item->type;
+                $item->transaksi_kamar->each(function ($transaksi) use ($type) {
+                    $transaksi->type = $type;
+                    $transaksi->jenis = $transaksi->kamar->jenis_kamar->name;
+                    unset($transaksi->kamar);
+                });
             }
         });
-        $kamar = $reservasi->pluck('transaksi_kamar');
-        return $reservasi;
+        $kamar = $reservasi->pluck('transaksi_kamar')->toArray();
+        $dataBaru = array_merge(...$kamar);
+        return $dataBaru;
     }
 }
