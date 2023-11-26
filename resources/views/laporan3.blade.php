@@ -53,16 +53,17 @@
             <p>Telp. (0274) 487711</p>
         </div>
         <hr>
-        <h3 style="text-align: center">LAPORAN PENDAPATAN BULANAN</h3>
+        <h3 style="text-align: center">LAPORAN JUMLAH TAMU</h3>
         <hr>
         <div>
             <h4>Tahun: {{ $tahun }}</h4>
+            <h4>Bulan: {{ $bulan }}</h4>
         </div>
 
         <table style="width: 100%; padding-top : 5px;" border="2px">
             <tr class="item">
                 <td>No</td>
-                <td>Bulan</td>
+                <td>Jenis Kamar</td>
                 <td>Grup</td>
                 <td>Personal</td>
                 <td>Total</td>
@@ -71,15 +72,15 @@
             @foreach ($data as $item)
                 <tr>
                     <td>{{ $i++ }}</td>
-                    <td>{{ $item['bulan'] }}</td>
-                    <td style="text-align: right;">Rp{{ number_format($item['grup']) }}</td>
-                    <td style="text-align: right;">Rp{{ number_format($item['personal']) }}</td>
-                    <td style="text-align: right;">Rp{{ number_format($item['total']) }}</td>
+                    <td>{{ $item['jenis'] }}</td>
+                    <td style="text-align: right;">{{ $item['grup'] }}</td>
+                    <td style="text-align: right;">{{ $item['personal'] }}</td>
+                    <td style="text-align: right;">{{ $item['total'] }}</td>
                 </tr>
             @endforeach
             <tr class="total">
                 <td colspan="4" style="text-align: right;">Total:</td>
-                <td style="text-align: right;">Rp{{ number_format($total)}}</td>
+                <td style="text-align: right;">{{ $total}}</td>
             </tr>
         </table>
         <div style="text-align: right;">
