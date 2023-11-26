@@ -181,5 +181,13 @@ Route::group(['prefix' => 'invoice', 'middleware' => ['auth:sanctum']], function
 
 //laporan
 Route::group(['prefix' => 'laporan', 'middleware' => ['auth:sanctum']], function () {
+    //cetak laporan 1
     Route::get('laporan-1', [LaporanController::class, 'laporan1']);
+    //cetak laporan 2
+    Route::get('laporan-2', [LaporanController::class, 'laporan2']);
+    //data laporan 2
+    Route::get('laporan-2/data', [LaporanController::class, 'laporan2Data']);
+    Route::get('laporan-3', [LaporanController::class, 'laporan3']);
+    Route::get('laporan-4', [LaporanController::class, 'laporan4']);
+    Route::get('laporan-5', [LaporanController::class, 'laporan5']);
 });
