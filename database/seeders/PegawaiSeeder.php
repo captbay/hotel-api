@@ -49,7 +49,7 @@ class PegawaiSeeder extends Seeder
             [
                 // user_id
                 'user_id' => 5,
-                'name' => 'Front Office Rickon',
+                'name' => 'Front Office',
                 'no_phone' => '08123456789',
                 'address' => 'Jl. Office',
             ],
