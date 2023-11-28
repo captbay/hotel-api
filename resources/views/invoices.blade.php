@@ -132,7 +132,11 @@
         <br>
         <p>Jaminan: Rp{{ number_format($data['jaminan']) }}</p>
         <p>Deposit: Rp{{ number_format($data['deposit']) }}</p>
-        <h4>Cash: Rp{{ number_format($data['tunai']) }}</h4>
+        @if($data['tunai'] < 0)
+            <h4>Kembalian: Rp{{ number_format(-$data['tunai']) }}</h4>
+        @else
+            <h4>Cash: Rp{{ number_format($data['tunai']) }}</h4>
+        @endif
         </div>
         <p style="text-align: center;">Thank You For Your Visit!</p>
     </div>

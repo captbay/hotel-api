@@ -129,9 +129,9 @@ class LaporanController extends Controller
 
             foreach ($data as $entry) {
                 if ($entry["type"] === "grup") {
-                    $totalTypeGrup += $entry["total_harga"];
+                    $totalTypeGrup += $entry["total_pembayaran"];
                 } elseif ($entry["type"] === "personal") {
-                    $totalTypePersonal += $entry["total_harga"];
+                    $totalTypePersonal += $entry["total_pembayaran"];
                 }
             }
 
@@ -222,9 +222,9 @@ class LaporanController extends Controller
 
             foreach ($data as $entry) {
                 if ($entry["type"] === "grup") {
-                    $totalTypeGrup += $entry["total_harga"];
+                    $totalTypeGrup += $entry["total_pembayaran"];
                 } elseif ($entry["type"] === "personal") {
-                    $totalTypePersonal += $entry["total_harga"];
+                    $totalTypePersonal += $entry["total_pembayaran"];
                 }
             }
 
