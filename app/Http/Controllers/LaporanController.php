@@ -276,8 +276,8 @@ class LaporanController extends Controller
                     ELSE 'personal'
                 END as type
                 "))
-                ->whereYear('created_at', $year)
-                ->whereMonth('created_at', $month)
+                ->whereYear('tanggal_reservasi', $year)
+                ->whereMonth('tanggal_reservasi', $month)
                 ->get();
         // Menyimpan nilai 'type' ke dalam setiap elemen 'transaksi_kamar' menggunakan each
         $reservasi->each(function ($item) {
@@ -370,8 +370,8 @@ class LaporanController extends Controller
                     ELSE 'personal'
                 END as type
                 "))
-                ->whereYear('created_at', $year)
-                ->whereMonth('created_at', $month)
+                ->whereYear('tanggal_reservasi', $year)
+                ->whereMonth('tanggal_reservasi', $month)
                 ->get();
         // Menyimpan nilai 'type' ke dalam setiap elemen 'transaksi_kamar' menggunakan each
         $reservasi->each(function ($item) {
