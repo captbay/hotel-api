@@ -19,7 +19,7 @@ class InvoiceSeeder extends Seeder
                 'reservasi_id' => 1,
                 'pegawai_id' => 5,
                 'no_invoice' => 'P301223-001',
-                'tanggal_lunas_nota' => '2022-12-31',
+                'tanggal_lunas_nota' => '2023-10-31',
                 'total_harga' => 650000,
                 'total_pajak' => 6500,
                 'total_pembayaran' => 656500
@@ -28,7 +28,7 @@ class InvoiceSeeder extends Seeder
                 'reservasi_id' => 2,
                 'pegawai_id' => 5,
                 'no_invoice' => 'G301223-002',
-                'tanggal_lunas_nota' => '2022-12-31',
+                'tanggal_lunas_nota' => '2023-10-31',
                 'total_harga' => 1450000,
                 'total_pajak' => 14500,
                 'total_pembayaran' => 1464500

@@ -59,8 +59,8 @@ class InvoiceController extends Controller
         $date = Carbon::now()->format('dmy');
         $count = $id_terakhir + 1;
         $id_generate  = sprintf("P".$date."-%03d", $count);
-        $total_harga =  $reservasi->total_harga_fasilitas_tambahan  ;//+ $reservasi->total_harga  ;
-        $pajak = $total_harga * 0.1;
+        $total_harga =  $reservasi->total_harga_fasilitas_tambahan + $reservasi->total_harga ;//+ $reservasi->total_harga  ;
+        $pajak = $reservasi->total_harga_fasilitas_tambahan * 0.1;
         $total_pembayaran = $total_harga + $pajak;
         invoice::create([
             'reservasi_id' => $id,
